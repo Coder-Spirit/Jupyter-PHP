@@ -1,0 +1,21 @@
+{
+    "name": "litipk/jupyter-php",
+    "description": "A PHP Kernel for Jupyter",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "5.*,>=5.4",
+        "ext-zmq": "*",
+        "psy/psysh": "0.6.*",
+        "composer/composer": "1.0.0-alpha11"
+    },
+    "require-dev": {
+
+    },
+    "autoload": {
+        "psr-4": { "Litipk\\JupyterPHP\\": "src/"}
+    },
+    "scripts": {
+
+    }
+}
