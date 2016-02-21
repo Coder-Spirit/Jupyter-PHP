@@ -4,10 +4,12 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": "5.*,>=5.4",
+        "php": ">=5.5.9",
         "ext-zmq": "*",
-        "psy/psysh": "0.6.*",
-        "composer/composer": "1.0.0-alpha11"
+        "psy/psysh": "0.7.*",
+        "composer/composer": "1.0.0-alpha11",
+        "react/zmq": "^0.3.0",
+        "ramsey/uuid": "^3.2"
     },
     "require-dev": {
 
