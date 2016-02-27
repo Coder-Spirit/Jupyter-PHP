@@ -21,7 +21,7 @@ use React\ZMQ\SocketWrapper;
 final class KernelCore
 {
     /** @var JupyterBroker */
-    private $jupyterBroker;
+    private $broker;
 
     /** @var \React\EventLoop\ExtEventLoop|\React\EventLoop\LibEventLoop|\React\EventLoop\LibEvLoop|\React\EventLoop\StreamSelectLoop */
     private $reactLoop;
@@ -44,7 +44,7 @@ final class KernelCore
      */
     public function __construct(JupyterBroker $jupyterBroker, array $connUris)
     {
-        $this->jupyterBroker = $jupyterBroker;
+        $this->broker = $jupyterBroker;
 
         $this->initSockets($connUris);
         $this->registerHandlers();
@@ -93,6 +93,9 @@ final class KernelCore
         $this->hbSocket->on('error', new HbErrorHandler());
         $this->hbSocket->on('messages', new HbMessagesHandler());
         $this->iopubSocket->on('messages', new IOPubMessagesHandler());
-        $this->shellSocket->on('messages', new ShellMessagesHandler());
+        $this->shellSocket->on(
+            'messages',
+            new ShellMessagesHandler($this->broker, $this->iopubSocket, $this->shellSocket)
+        );
     }
 }
