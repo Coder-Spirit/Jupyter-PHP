@@ -48,16 +48,16 @@ final class ShellMessagesHandler
     {
         list($zmqId, $delim, $hmac, $header, $parentHeader, $metadata, $content) = $msg;
 
-        $header = json_decode($header);
-        $content = json_decode($content);
+        $header = json_decode($header, true);
+        $content = json_decode($content, true);
 
-        if ('kernel_info_request' === $header->msg_type) {
+        if ('kernel_info_request' === $header['msg_type']) {
             $this->kernelInfoAction->call($header, $content);
-        } elseif ('execute_request' === $header->msg_type) {
+        } elseif ('execute_request' === $header['msg_type']) {
             $this->executeAction->call($header, $content);
-        } elseif ('history_request' === $header->msg_type) {
+        } elseif ('history_request' === $header['msg_type']) {
             $this->historyAction->call($header, $content);
-        } elseif ('shutdown_request' === $header->msg_type) {
+        } elseif ('shutdown_request' === $header['msg_type']) {
             $this->shutdownAction->call($header, $content);
         } else {
             // TODO: Add logger!

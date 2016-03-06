@@ -5,11 +5,13 @@
     "license": "MIT",
     "require": {
         "php": ">=5.5.9",
-        "ext-zmq": "*",
-        "psy/psysh": "0.7.*",
         "composer/composer": "1.0.0-alpha11",
+        "ext-zmq": "*",
+        "monolog/monolog": "^1.9",
+        "psy/psysh": "0.7.*",
+        "ramsey/uuid": "^3.2",
         "react/zmq": "^0.3.0",
-        "ramsey/uuid": "^3.2"
+        "symfony/polyfill-php70": "^1.1"
     },
     "require-dev": {
 

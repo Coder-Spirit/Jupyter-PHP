@@ -33,7 +33,7 @@ final class ExecuteAction implements Action
         $this->shellSocket = $shellSocket;
     }
 
-    public function call($header, $content)
+    public function call(array $header, array $content)
     {
         $this->broker->send(
             $this->iopubSocket, 'status', ['execution_state' => 'busy'], $header
@@ -44,7 +44,7 @@ final class ExecuteAction implements Action
         //  TODO: Here is where PsySH goes
         $vars_before = get_defined_vars();
         ob_start();
-        $result = eval($content->code);
+        $result = eval($content['code']);
         $stdOut = ob_get_contents();
         ob_end_clean();
         $vars_after = get_defined_vars();

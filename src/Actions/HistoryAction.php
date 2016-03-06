@@ -28,8 +28,8 @@ final class HistoryAction implements Action
         $this->shellSocket = $shellSocket;
     }
 
-    public function call($header, $content)
+    public function call(array $header, array $content)
     {
-        $this->broker->send($this->shellSocket, 'history_reply', ['history' => array()], $header);
+        $this->broker->send($this->shellSocket, 'history_reply', ['history' => []], $header);
     }
 }
