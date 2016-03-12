@@ -51,10 +51,10 @@ final class JupyterBroker
         $header = $this->createHeader($msgType);
 
         $msgDef = [
-            json_encode($header),
-            json_encode($parentHeader),
-            json_encode($metadata),
-            json_encode($content),
+            json_encode(empty($header) ? new \StdClass : $header),
+            json_encode(empty($parentHeader) ? new \StdClass : $parentHeader),
+            json_encode(empty($metadata) ? new \StdClass : $metadata),
+            json_encode(empty($content) ? new \StdClass : $content),
         ];
 
         $stream->send(array_merge(

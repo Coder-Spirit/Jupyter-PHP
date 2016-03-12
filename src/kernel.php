@@ -8,7 +8,26 @@ namespace Litipk\JupyterPHP;
 require (__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php');
 
 
+use Litipk\JupyterPHP\System\System;
+use Monolog\Handler\FingersCrossedHandler;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\SyslogHandler;
+use Monolog\Logger;
 use Ramsey\Uuid\Uuid;
+
+
+$system = System::getSystem();
+
+$logger = new Logger('main');
+
+if ('root' === $system->getCurrentUser()) {
+    $logger->pushHandler(new FingersCrossedHandler(new SyslogHandler('jupyter-php'), null, 128));
+} else {
+    $system->ensurePath($system->getAppDataDirectory().'/logs');
+    $logger->pushHandler(new FingersCrossedHandler(
+        new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7), null, 128
+    ));
+}
 
 
 try {
@@ -25,18 +44,5 @@ try {
 
     $kernelCore->run();
 } catch (\Exception $e) {
-    if (
-        'linux' === strtolower(PHP_OS) &&
-        preg_match('#^(/home/([a-zA-Z0-9_]+)/\.jupyter-php)/pkgs#', __DIR__, $execDirMatch) > 0
-    ) {
-        if (!file_exists($execDirMatch[1])) {
-            mkdir($execDirMatch[1].'/logs', 0755, true);
-        }
-
-        file_put_contents(
-            $execDirMatch[1].'/logs/error.log',
-            $e->getFile().' : '.$e->getLine().' :: '.$e->getMessage()."\n\t".
-            $e->getTraceAsString()
-        );
-    }
+    $logger->error('Unexpected error', ['exception' => $e]);
 }
