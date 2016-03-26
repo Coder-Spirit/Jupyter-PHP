@@ -54,7 +54,8 @@ final class KernelInfoAction implements Action
                     'name' => 'PHP',
                     'version' => phpversion(),
                     'mimetype' => 'text/x-php',
-                    'file_extension' => '.php'
+                    'file_extension' => '.php',
+                    'pygments_lexer' => 'PHP'
                 ]
             ]
         );

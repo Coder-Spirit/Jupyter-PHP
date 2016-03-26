@@ -10,7 +10,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-final class SoulVoice implements OutputInterface
+final class KernelOutput implements OutputInterface
 {
     /** @var ExecuteAction */
     private $executeAction;
@@ -19,7 +19,7 @@ final class SoulVoice implements OutputInterface
     private $logger;
 
     /**
-     * SoulVoice constructor.
+     * KernelOutput constructor.
      * @param ExecuteAction $executeAction
      * @param LoggerInterface $logger
      */
@@ -38,7 +38,7 @@ final class SoulVoice implements OutputInterface
      */
     public function write($messages, $newline = false, $options = 0)
     {
-        $this->logger->debug('Write operation inside SoulVoice');
+        $this->logger->debug('Write operation inside KernelOutput');
         
         
         if (is_string($messages)) {
@@ -127,12 +127,11 @@ final class SoulVoice implements OutputInterface
 
     /**
      * Sets the decorated flag.
-     *
      * @param bool $decorated Whether to decorate the messages
      */
     public function setDecorated($decorated)
     {
-        // TODO: Implement setDecorated() method.
+        // Interface compliance
     }
 
     /**
@@ -147,12 +146,11 @@ final class SoulVoice implements OutputInterface
 
     /**
      * Sets output formatter.
-     *
      * @param OutputFormatterInterface $formatter
      */
     public function setFormatter(OutputFormatterInterface $formatter)
     {
-        // TODO: Implement setFormatter() method.
+        // Interface compliance
     }
 
     /**

@@ -10,7 +10,7 @@ use Litipk\JupyterPHP\Actions\KernelInfoAction;
 use Litipk\JupyterPHP\Actions\ShutdownAction;
 use Litipk\JupyterPHP\JupyterBroker;
 
-use Litipk\JupyterPHP\SoulVoice;
+use Litipk\JupyterPHP\KernelOutput;
 use Monolog\Logger;
 use Psy\Shell;
 use React\ZMQ\SocketWrapper;
@@ -60,7 +60,7 @@ final class ShellMessagesHandler
             $iopubSocket, 'status', ['execution_state' => 'starting'], []
         );
 
-        $this->shellSoul->setOutput(new SoulVoice($this->executeAction, $this->logger->withName('SoulVoice')));
+        $this->shellSoul->setOutput(new KernelOutput($this->executeAction, $this->logger->withName('KernelOutput')));
     }
 
     /**
