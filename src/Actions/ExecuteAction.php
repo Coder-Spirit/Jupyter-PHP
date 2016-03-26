@@ -66,7 +66,7 @@ final class ExecuteAction implements Action
         $this->broker->send(
             $this->iopubSocket,
             'execute_result',
-            ['execution_count' => $execCount + 1, 'data' => $result, 'metadata' => new S],
+            ['execution_count' => $execCount + 1, 'data' => $result, 'metadata' => new \stdClass],
             $header
         );
         $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'idle'], $header);
