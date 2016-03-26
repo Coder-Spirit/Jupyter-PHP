@@ -9,6 +9,7 @@ require (__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY
 
 
 use Litipk\JupyterPHP\System\System;
+use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\SyslogHandler;
@@ -17,15 +18,18 @@ use Ramsey\Uuid\Uuid;
 
 
 $system = System::getSystem();
-
-$logger = new Logger('main');
+$logger = new Logger('kernel');
 
 if ('root' === $system->getCurrentUser()) {
-    $logger->pushHandler(new FingersCrossedHandler(new SyslogHandler('jupyter-php'), null, 128));
+    if (System::OS_LINUX === $system->getOperativeSystem()) {
+        $logger->pushHandler(new FingersCrossedHandler(new SyslogHandler('jupyter-php'), null, 128));
+    }
 } else {
     $system->ensurePath($system->getAppDataDirectory().'/logs');
     $logger->pushHandler(new FingersCrossedHandler(
-        new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7), null, 128
+        new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7),
+        new ErrorLevelActivationStrategy(Logger::DEBUG),
+        128
     ));
 }
 
@@ -37,9 +41,13 @@ try {
 
     $kernelCore = new KernelCore(
         new JupyterBroker(
-            $connectionSettings['key'], $connectionSettings['signature_scheme'], Uuid::uuid4()
+            $connectionSettings['key'],
+            $connectionSettings['signature_scheme'],
+            Uuid::uuid4(),
+            $logger->withName('JupyterBroker')
         ),
-        $connUris
+        $connUris,
+        $logger->withName('KernelCore')
     );
 
     $kernelCore->run();

@@ -4,6 +4,7 @@
 namespace Litipk\JupyterPHP;
 
 
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use React\ZMQ\SocketWrapper;
@@ -23,18 +24,23 @@ final class JupyterBroker
     /** @var UuidInterface */
     private $sesssionId;
 
+    /** @var null|LoggerInterface */
+    private $logger;
+
     /**
      * JupyterBroker constructor.
      * @param string $key
      * @param string $signatureScheme
      * @param UuidInterface $sessionId
+     * @param null|LoggerInterface $logger
      */
-    public function __construct($key, $signatureScheme, UuidInterface $sessionId)
+    public function __construct($key, $signatureScheme, UuidInterface $sessionId, LoggerInterface $logger = null)
     {
         $this->key = $key;
         $this->signatureScheme = $signatureScheme;
         $this->hashAlgorithm = preg_split('/-/', $signatureScheme)[1];
         $this->sesssionId = $sessionId;
+        $this->logger = $logger;
     }
 
     /**
@@ -51,16 +57,22 @@ final class JupyterBroker
         $header = $this->createHeader($msgType);
 
         $msgDef = [
-            json_encode(empty($header) ? new \StdClass : $header),
-            json_encode(empty($parentHeader) ? new \StdClass : $parentHeader),
-            json_encode(empty($metadata) ? new \StdClass : $metadata),
-            json_encode(empty($content) ? new \StdClass : $content),
+            json_encode(empty($header) ? new \stdClass : $header),
+            json_encode(empty($parentHeader) ? new \stdClass : $parentHeader),
+            json_encode(empty($metadata) ? new \stdClass : $metadata),
+            json_encode(empty($content) ? new \stdClass : $content),
         ];
 
-        $stream->send(array_merge(
+        $finalMsg = array_merge(
             ['<IDS|MSG>', $this->sign($msgDef)],
             $msgDef
-        ));
+        );
+
+        if (null !== $this->logger) {
+            $this->logger->debug('Sent message', ['processId' => posix_getpid(), 'message/' => $finalMsg]);
+        }
+
+        $stream->send($finalMsg);
     }
 
     /**
