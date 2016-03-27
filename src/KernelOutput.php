@@ -6,7 +6,9 @@ namespace Litipk\JupyterPHP;
 
 use Litipk\JupyterPHP\Actions\ExecuteAction;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
@@ -17,6 +19,9 @@ final class KernelOutput implements OutputInterface
     
     /** @var LoggerInterface */
     private $logger;
+    
+    /** @var OutputFormatterInterface */
+    private $formatter;
 
     /**
      * KernelOutput constructor.
@@ -27,6 +32,11 @@ final class KernelOutput implements OutputInterface
     {
         $this->executeAction = $executeAction;
         $this->logger = $logger;
+        
+        $this->formatter = new OutputFormatter();
+        $this->formatter->setDecorated(true);
+
+        $this->initFormatters();
     }
 
     /**
@@ -36,22 +46,36 @@ final class KernelOutput implements OutputInterface
      * @param bool $newline Whether to add a newline
      * @param int $options A bitmask of options (one of the OUTPUT or VERBOSITY constants), 0 is considered the same as self::OUTPUT_NORMAL | self::VERBOSITY_NORMAL
      */
-    public function write($messages, $newline = false, $options = 0)
+    public function write($messages, $newline = false, $options = self::OUTPUT_NORMAL)
     {
         $this->logger->debug('Write operation inside KernelOutput');
-        
+
+        $types = self::OUTPUT_NORMAL | self::OUTPUT_RAW | self::OUTPUT_PLAIN;
+        $type = $types & $options ?: self::OUTPUT_NORMAL;
         
         if (is_string($messages)) {
             if ("<aside>⏎</aside>" === $messages) {
                 return;
             }
-            
-            $this->executeAction->notifyMessage($messages . ($newline ? '' : "\n"));
+
+            $preparedMessage = $messages . ($newline ? '' : "\n");
+            switch ($type) {
+                case OutputInterface::OUTPUT_NORMAL:
+                    $preparedMessage = $this->formatter->format($messages) . ($newline ? '' : "\n");
+                    break;
+                case OutputInterface::OUTPUT_RAW:
+                    break;
+                case OutputInterface::OUTPUT_PLAIN:
+                    $preparedMessage = strip_tags($this->formatter->format($messages)) . ($newline ? '' : "\n");
+                    break;
+            }
         } elseif (is_array($messages)) {
-            $this->executeAction->notifyMessage(implode("\n", $messages) . ($newline ? '' : "\n"));
+            $preparedMessage = implode("\n", $messages) . ($newline ? '' : "\n");
         } else {
-            
+            return; // TODO: Throw an error?
         }
+
+        $this->executeAction->notifyMessage($preparedMessage);
     }
 
     /**
@@ -141,7 +165,7 @@ final class KernelOutput implements OutputInterface
      */
     public function isDecorated()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -155,12 +179,35 @@ final class KernelOutput implements OutputInterface
 
     /**
      * Returns current output formatter instance.
-     *
      * @return OutputFormatterInterface
      */
     public function getFormatter()
     {
-        $this->logger->debug('Trying to get a formatter :( .');
-        // TODO: Implement getFormatter() method.
+        return $this->formatter;
+    }
+
+    /**
+     * Initialize output formatter styles.
+     */
+    private function initFormatters()
+    {
+        $formatter = $this->getFormatter();
+
+        $formatter->setStyle('error', new OutputFormatterStyle('red', null, ['bold']));
+        $formatter->setStyle('warning', new OutputFormatterStyle('yellow', null, ['bold']));
+        $formatter->setStyle('aside',   new OutputFormatterStyle('blue'));
+        $formatter->setStyle('strong',  new OutputFormatterStyle(null, null, array('bold')));
+        $formatter->setStyle('return',  new OutputFormatterStyle('cyan'));
+        $formatter->setStyle('urgent',  new OutputFormatterStyle('red'));
+        $formatter->setStyle('hidden',  new OutputFormatterStyle('white'));
+
+        // Types
+        $formatter->setStyle('number',   new OutputFormatterStyle('magenta'));
+        $formatter->setStyle('string',   new OutputFormatterStyle('green'));
+        $formatter->setStyle('bool',     new OutputFormatterStyle('cyan'));
+        $formatter->setStyle('keyword',  new OutputFormatterStyle('yellow'));
+        $formatter->setStyle('comment',  new OutputFormatterStyle('blue'));
+        $formatter->setStyle('object',   new OutputFormatterStyle('blue'));
+        $formatter->setStyle('resource', new OutputFormatterStyle('yellow'));
     }
 }

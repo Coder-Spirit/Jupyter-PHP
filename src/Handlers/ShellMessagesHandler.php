@@ -12,6 +12,7 @@ use Litipk\JupyterPHP\JupyterBroker;
 
 use Litipk\JupyterPHP\KernelOutput;
 use Monolog\Logger;
+use Psy\Configuration;
 use Psy\Shell;
 use React\ZMQ\SocketWrapper;
 
@@ -41,26 +42,26 @@ final class ShellMessagesHandler
      * @param JupyterBroker $broker
      * @param SocketWrapper $iopubSocket
      * @param SocketWrapper $shellSocket
-     * @param Shell $shellSoul
      * @param Logger $logger
      */
     public function __construct(
-        JupyterBroker $broker, SocketWrapper $iopubSocket, SocketWrapper $shellSocket, Shell $shellSoul, Logger $logger
+        JupyterBroker $broker, SocketWrapper $iopubSocket, SocketWrapper $shellSocket, Logger $logger
     )
     {
-        $this->executeAction = new ExecuteAction($broker, $iopubSocket, $shellSocket, $shellSoul);
+        $this->shellSoul = new Shell();
+        
+        $this->executeAction = new ExecuteAction($broker, $iopubSocket, $shellSocket, $this->shellSoul);
         $this->historyAction = new HistoryAction($broker, $shellSocket);
         $this->kernelInfoAction = new KernelInfoAction($broker, $shellSocket, $iopubSocket);
         $this->shutdownAction = new ShutdownAction($broker, $shellSocket);
-
-        $this->shellSoul = $shellSoul;
+        
         $this->logger = $logger;
 
         $broker->send(
             $iopubSocket, 'status', ['execution_state' => 'starting'], []
         );
 
-        $this->shellSoul->setOutput(new KernelOutput($this->executeAction, $this->logger->withName('KernelOutput')));
+        $this->shellSoul->setOutput( new KernelOutput($this->executeAction, $this->logger->withName('KernelOutput')));
     }
 
     /**

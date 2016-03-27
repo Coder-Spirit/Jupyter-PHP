@@ -10,7 +10,7 @@ use Litipk\JupyterPHP\Handlers\IOPubMessagesHandler;
 use Litipk\JupyterPHP\Handlers\ShellMessagesHandler;
 
 use Monolog\Logger;
-use Psy\Shell;
+
 use React\EventLoop\Factory as ReactFactory;
 use React\ZMQ\Context as ReactZmqContext;
 use React\ZMQ\SocketWrapper;
@@ -42,9 +42,6 @@ final class KernelCore
     /** @var SocketWrapper|\ZMQSocket */
     private $shellSocket;
 
-    /** @var Shell */
-    private $shellSoul;
-
     /**
      * KernelCore constructor.
      * @param JupyterBroker $jupyterBroker
@@ -55,9 +52,7 @@ final class KernelCore
     {
         $this->broker = $jupyterBroker;
         $this->logger = $logger;
-
-        $this->shellSoul = new Shell();
-
+        
         $this->initSockets($connUris);
         $this->registerHandlers();
     }
@@ -120,7 +115,6 @@ final class KernelCore
                 $this->broker,
                 $this->iopubSocket,
                 $this->shellSocket,
-                $this->shellSoul,
                 $this->logger->withName('ShellMessagesHandler')
             )
         );
