@@ -20,7 +20,8 @@ In addition to the Jupyter compatibility, the new Jupyter-PHP adds a lot of impr
 
 ## Getting started
 
-To be written.
+The recommended way is to go to the [*Jupyter-PHP installer*'s page](https://litipk.github.io/Jupyter-PHP-Installer/)
+and follow its instructions. 
 
 ## Learn more
 
