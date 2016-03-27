@@ -1,4 +1,4 @@
-#!/usr/bn/env php
+#!/usr/bin/env php
 <?php
 
 
@@ -20,15 +20,21 @@ use Ramsey\Uuid\Uuid;
 $system = System::getSystem();
 $logger = new Logger('kernel');
 
+$loggerActivationStrategy = new ErrorLevelActivationStrategy(LoggerSettings::getCrossFingersLevel());
+
 if ('root' === $system->getCurrentUser()) {
     if (System::OS_LINUX === $system->getOperativeSystem()) {
-        $logger->pushHandler(new FingersCrossedHandler(new SyslogHandler('jupyter-php'), null, 128));
+        $logger->pushHandler(new FingersCrossedHandler(
+            new SyslogHandler('jupyter-php'),
+            $loggerActivationStrategy,
+            128
+        ));
     }
 } else {
     $system->ensurePath($system->getAppDataDirectory().'/logs');
     $logger->pushHandler(new FingersCrossedHandler(
         new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7),
-        new ErrorLevelActivationStrategy(Logger::DEBUG),
+        $loggerActivationStrategy,
         128
     ));
 }

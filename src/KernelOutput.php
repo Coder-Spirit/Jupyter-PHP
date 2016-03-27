@@ -48,8 +48,6 @@ final class KernelOutput implements OutputInterface
      */
     public function write($messages, $newline = false, $options = self::OUTPUT_NORMAL)
     {
-        $this->logger->debug('Write operation inside KernelOutput');
-
         $types = self::OUTPUT_NORMAL | self::OUTPUT_RAW | self::OUTPUT_PLAIN;
         $type = $types & $options ?: self::OUTPUT_NORMAL;
         
@@ -200,6 +198,16 @@ final class KernelOutput implements OutputInterface
         $formatter->setStyle('return',  new OutputFormatterStyle('cyan'));
         $formatter->setStyle('urgent',  new OutputFormatterStyle('red'));
         $formatter->setStyle('hidden',  new OutputFormatterStyle('white'));
+
+        // Visibility
+        $formatter->setStyle('public',    new OutputFormatterStyle(null, null, array('bold')));
+        $formatter->setStyle('protected', new OutputFormatterStyle('yellow'));
+        $formatter->setStyle('private',   new OutputFormatterStyle('red'));
+        $formatter->setStyle('global',    new OutputFormatterStyle('cyan', null, array('bold')));
+        $formatter->setStyle('const',     new OutputFormatterStyle('cyan'));
+        $formatter->setStyle('class',     new OutputFormatterStyle('blue', null, array('underscore')));
+        $formatter->setStyle('function',  new OutputFormatterStyle(null));
+        $formatter->setStyle('default',   new OutputFormatterStyle(null));
 
         // Types
         $formatter->setStyle('number',   new OutputFormatterStyle('magenta'));

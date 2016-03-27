@@ -69,7 +69,7 @@ final class JupyterBroker
         );
 
         if (null !== $this->logger) {
-            $this->logger->debug('Sent message', ['processId' => posix_getpid(), 'message/' => $finalMsg]);
+            $this->logger->debug('Sent message', ['processId' => posix_getpid(), 'message' => $finalMsg]);
         }
 
         $stream->send($finalMsg);
