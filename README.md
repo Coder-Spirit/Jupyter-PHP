@@ -30,9 +30,9 @@ and follow its instructions.
 
 ## How to contribute
 
- * First of all, you can take a look on the [bugtracker](https://github.com/Litipk/php-bignumbers/issues) and decide if there is something that you want to do :wink: . If you think there are missing improvements in this file, then you are invited to modify the TODO list.
+ * First of all, you can take a look on the [bugtracker](https://github.com/Litipk/Jupyter-PHP-Installer/issues) and decide if there is something that you want to do :wink: . If you think there are missing improvements in this file, then you are invited to modify the TODO list.
  * You can also send us bug reports using the same bugtracker.
- * If you are really interested on helping to improve Litipk\BigNumbers, we recommend to read the [contributing guidelines](https://github.com/Litipk/php-bignumbers/blob/master/CONTRIBUTING.md).
+ * If you are really interested on helping to improve Litipk\BigNumbers, we recommend to read the [contributing guidelines](https://github.com/Litipk/Jupyter-PHP-Installer/blob/master/CONTRIBUTING.md).
 
 
 ## License
