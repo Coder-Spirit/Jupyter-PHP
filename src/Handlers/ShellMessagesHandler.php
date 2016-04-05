@@ -12,7 +12,6 @@ use Litipk\JupyterPHP\JupyterBroker;
 
 use Litipk\JupyterPHP\KernelOutput;
 use Monolog\Logger;
-use Psy\Configuration;
 use Psy\Shell;
 use React\ZMQ\SocketWrapper;
 
@@ -93,6 +92,8 @@ final class ShellMessagesHandler
             $this->historyAction->call($header, $content);
         } elseif ('shutdown_request' === $header['msg_type']) {
             $this->shutdownAction->call($header, $content);
+        } elseif ('comm_open' === $header['msg_type']) {
+            // TODO: Research about what should be done.
         } else {
             $this->logger->error('Unknown message type', ['processId' => getmypid(), 'header' => $header]);
         }

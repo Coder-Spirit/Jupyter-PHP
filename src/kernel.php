@@ -11,7 +11,9 @@ require (__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY
 use Litipk\JupyterPHP\System\System;
 use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
 use Monolog\Handler\FingersCrossedHandler;
+use Monolog\Handler\GroupHandler;
 use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;
 use Ramsey\Uuid\Uuid;
@@ -24,16 +26,24 @@ $loggerActivationStrategy = new ErrorLevelActivationStrategy(LoggerSettings::get
 
 if ('root' === $system->getCurrentUser()) {
     if (System::OS_LINUX === $system->getOperativeSystem()) {
-        $logger->pushHandler(new FingersCrossedHandler(
-            new SyslogHandler('jupyter-php'),
-            $loggerActivationStrategy,
-            128
-        ));
+        $logger->pushHandler(
+            new FingersCrossedHandler(
+                new GroupHandler([
+                    new SyslogHandler('jupyter-php'),
+                    new StreamHandler('php://stdout')
+                ]),
+                $loggerActivationStrategy,
+                128
+            )
+        );
     }
 } else {
     $system->ensurePath($system->getAppDataDirectory().'/logs');
     $logger->pushHandler(new FingersCrossedHandler(
-        new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7),
+        new GroupHandler([
+            new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7),
+            new StreamHandler('php://stdout')
+        ]),
         $loggerActivationStrategy,
         128
     ));
