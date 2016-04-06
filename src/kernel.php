@@ -38,7 +38,7 @@ if ('root' === $system->getCurrentUser()) {
             new FingersCrossedHandler(
                 new GroupHandler([
                     new SyslogHandler('jupyter-php'),
-                    new StreamHandler('php://stdout')
+                    new StreamHandler('php://stderr')
                 ]),
                 $loggerActivationStrategy,
                 128
@@ -50,7 +50,7 @@ if ('root' === $system->getCurrentUser()) {
     $logger->pushHandler(new FingersCrossedHandler(
         new GroupHandler([
             new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7),
-            new StreamHandler('php://stdout')
+            new StreamHandler('php://stderr')
         ]),
         $loggerActivationStrategy,
         128
