@@ -33,6 +33,24 @@ abstract class UnixSystem extends System
     }
 
     /**
+     * @param string $cmdName
+     * @return boolean
+     */
+    public function checkIfCommandExists($cmdName)
+    {
+        if (!function_exists('exec')) {
+            return false;
+        }
+
+        $sysResponse = exec(
+            'PATH='.getenv('PATH').'; '.
+            "if command -v ".$cmdName." >/dev/null 2>&1; then echo \"true\"; else echo \"false\"; fi;"
+        );
+
+        return filter_var($sysResponse, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    }
+
+    /**
      * Returns true if the path is a "valid" path and is writable (even if the complete path does not yet exist).
      * @param string $path
      * @return boolean
