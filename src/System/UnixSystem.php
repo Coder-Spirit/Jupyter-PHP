@@ -50,6 +50,12 @@ abstract class UnixSystem extends System
         return filter_var($sysResponse, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     }
 
+    /** @return string */
+    public function getAppDataDirectory()
+    {
+        return $this->getCurrentUserHome().'/.jupyter-php';
+    }
+
     /**
      * Returns true if the path is a "valid" path and is writable (even if the complete path does not yet exist).
      * @param string $path
