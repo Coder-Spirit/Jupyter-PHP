@@ -41,7 +41,7 @@ abstract class UnixSystem extends System
     {
         $absPath = $this->getAbsolutePath($path);
         $absPathParts = preg_split('/\//', preg_replace('/(^\/|\/$)/', '', $absPath));
-        $nSteps = count($absPath);
+        $nSteps = count($absPathParts);
 
         $tmpPath = '';
         $prevReadable = false;
