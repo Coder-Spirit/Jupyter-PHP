@@ -40,7 +40,13 @@ abstract class System
     /** @return string */
     public abstract function getCurrentUserHome();
 
-    /** @return string */
+   /**
+     * @param string $cmdName
+     * @return boolean
+     */
+    public abstract function checkIfCommandExists($cmdName);
+
+   /** @return string */
     public abstract function getAppDataDirectory();
 
     /**

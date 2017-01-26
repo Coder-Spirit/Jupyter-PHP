@@ -11,10 +11,4 @@ final class LinuxSystem extends UnixSystem
     {
         return self::OS_LINUX;
     }
-
-    /** @return string */
-    public function getAppDataDirectory()
-    {
-        return $this->getCurrentUserHome().'/.jupyter-php';
-    }
 }
