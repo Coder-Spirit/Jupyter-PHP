@@ -1,13 +1,23 @@
 <?php
 
+/*
+ * This file is part of Jupyter-PHP.
+ *
+ * (c) 2015-2017 Litipk
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Litipk\JupyterPHP\System;
 
 
 abstract class UnixSystem extends System
 {
-    /** @return string */
-    public function getCurrentUser()
+    /**
+     * @return string
+     */
+    public function getCurrentUser(): string
     {
         if (function_exists('posix_getpwuid') && function_exists('posix_geteuid')) {
             $pwuData = posix_getpwuid(posix_geteuid());
@@ -19,8 +29,10 @@ abstract class UnixSystem extends System
         }
     }
 
-    /** @return string */
-    public function getCurrentUserHome()
+    /**
+     * @return string
+     */
+    public function getCurrentUserHome(): string
     {
         if (function_exists('posix_getpwuid') && function_exists('posix_geteuid')) {
             $pwuData = posix_getpwuid(posix_geteuid());
@@ -36,7 +48,7 @@ abstract class UnixSystem extends System
      * @param string $cmdName
      * @return boolean
      */
-    public function checkIfCommandExists($cmdName)
+    public function checkIfCommandExists(string $cmdName): bool
     {
         if (!function_exists('exec')) {
             return false;
@@ -47,11 +59,13 @@ abstract class UnixSystem extends System
             "if command -v ".$cmdName." >/dev/null 2>&1; then echo \"true\"; else echo \"false\"; fi;"
         );
 
-        return filter_var($sysResponse, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        return filter_var($sysResponse, FILTER_VALIDATE_BOOLEAN);
     }
 
-    /** @return string */
-    public function getAppDataDirectory()
+    /**
+     * @return string
+     */
+    public function getAppDataDirectory(): string
     {
         return $this->getCurrentUserHome().'/.jupyter-php';
     }
@@ -61,7 +75,7 @@ abstract class UnixSystem extends System
      * @param string $path
      * @return boolean
      */
-    public function validatePath($path)
+    public function validatePath(string $path): bool
     {
         $absPath = $this->getAbsolutePath($path);
         $absPathParts = preg_split('/\//', preg_replace('/(^\/|\/$)/', '', $absPath));
@@ -101,7 +115,7 @@ abstract class UnixSystem extends System
      * @param string $path
      * @return string The "absolute path" version of $path.
      */
-    public function ensurePath($path)
+    public function ensurePath(string $path): string
     {
         $absPath = $this->getAbsolutePath($path);
 
@@ -116,7 +130,7 @@ abstract class UnixSystem extends System
      * @param string $path
      * @return bool
      */
-    protected function isAbsolutePath($path)
+    protected function isAbsolutePath(string $path): bool
     {
         return (1 === preg_match('#^/#', $path));
     }
@@ -125,8 +139,10 @@ abstract class UnixSystem extends System
      * @param string $path
      * @return string
      */
-    protected function getAbsolutePath($path)
+    protected function getAbsolutePath(string $path): string
     {
-        return $this->isAbsolutePath($path) ? $path : (getcwd() . DIRECTORY_SEPARATOR . $path);
+        return $this->isAbsolutePath($path)
+            ? $path
+            : (getcwd() . DIRECTORY_SEPARATOR . $path);
     }
 }

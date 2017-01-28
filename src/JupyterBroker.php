@@ -3,7 +3,7 @@
 /*
  * This file is part of Jupyter-PHP.
  *
- * (c) 2015-2016 Litipk
+ * (c) 2015-2017 Litipk
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -35,13 +35,7 @@ final class JupyterBroker
     /** @var null|LoggerInterface */
     private $logger;
 
-    /**
-     * JupyterBroker constructor.
-     * @param string $key
-     * @param string $signatureScheme
-     * @param UuidInterface $sessionId
-     * @param null|LoggerInterface $logger
-     */
+
     public function __construct($key, $signatureScheme, UuidInterface $sessionId, LoggerInterface $logger = null)
     {
         $this->key = $key;
@@ -51,13 +45,6 @@ final class JupyterBroker
         $this->logger = $logger;
     }
 
-    /**
-     * @param SocketWrapper $stream
-     * @param string $msgType
-     * @param array $content
-     * @param array $parentHeader
-     * @param array $metadata
-     */
     public function send(
         SocketWrapper $stream, $msgType, array $content = [], array $parentHeader = [], array $metadata = []
     )
@@ -83,11 +70,7 @@ final class JupyterBroker
         $stream->send($finalMsg);
     }
 
-    /**
-     * @param string $msgType
-     * @return array
-     */
-    private function createHeader($msgType)
+    private function createHeader(string $msgType): array
     {
         return [
             'date'     => (new \DateTime('NOW'))->format('c'),
@@ -98,7 +81,8 @@ final class JupyterBroker
         ];
     }
 
-    private function sign(array $message_list) {
+    private function sign(array $message_list): string
+    {
         $hm = hash_init(
             $this->hashAlgorithm,
             HASH_HMAC,

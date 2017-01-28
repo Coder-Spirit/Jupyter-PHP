@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of Jupyter-PHP.
+ *
+ * (c) 2015-2017 Litipk
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Litipk\JupyterPHP\System;
 
@@ -13,8 +21,7 @@ abstract class System
     const OS_WIN     = 4;
 
 
-    /** @return System */
-    public static function getSystem()
+    public static function getSystem(): System
     {
         $phpOs = self::guessOperativeSystem();
 
@@ -31,51 +38,35 @@ abstract class System
         }
     }
 
-    /** @return integer */
-    public abstract function getOperativeSystem();
+    public abstract function getOperativeSystem(): int;
 
-    /** @return string */
-    public abstract function getCurrentUser();
+    public abstract function getCurrentUser(): string;
 
-    /** @return string */
-    public abstract function getCurrentUserHome();
+    public abstract function getCurrentUserHome(): string;
 
-   /**
-     * @param string $cmdName
-     * @return boolean
-     */
-    public abstract function checkIfCommandExists($cmdName);
+    public abstract function checkIfCommandExists(string $cmdName): bool;
 
-   /** @return string */
-    public abstract function getAppDataDirectory();
+    public abstract function getAppDataDirectory(): string;
 
     /**
-     * Returns true if the path is a "valid" path and is writable (event if the complete path does not yet exist).
+     * Returns true if the path is a "valid" path and is writable (even if the complete path does not yet exist).
      * @param string $path
-     * @return boolean
+     * @return bool
      */
-    public abstract function validatePath($path);
+    public abstract function validatePath(string $path): bool;
 
     /**
+     * Ensures that the specified path exists.
      * @param string $path
      * @return string The "absolute path" version of $path.
      */
-    public abstract function ensurePath($path);
+    public abstract function ensurePath(string $path): string;
 
-    /**
-     * @param string $path
-     * @return boolean
-     */
-    protected abstract function isAbsolutePath($path);
+    protected abstract function isAbsolutePath(string $path): bool;
 
-    /**
-     * @param string $path
-     * @return string
-     */
-    protected abstract function getAbsolutePath($path);
+    protected abstract function getAbsolutePath(string $path): string;
 
-    /** @return integer */
-    private static function guessOperativeSystem()
+    private static function guessOperativeSystem(): int
     {
         $phpOS = strtolower(PHP_OS);
 

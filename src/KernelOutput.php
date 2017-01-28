@@ -3,7 +3,7 @@
 /*
  * This file is part of Jupyter-PHP.
  *
- * (c) 2015-2016 Litipk
+ * (c) 2015-2017 Litipk
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -54,7 +54,7 @@ final class KernelOutput implements OutputInterface
      * @param bool $newline Whether to add a newline
      * @param int $options A bitmask of options (one of the OUTPUT or VERBOSITY constants), 0 is considered the same as self::OUTPUT_NORMAL | self::VERBOSITY_NORMAL
      */
-    public function write($messages, $newline = false, $options = self::OUTPUT_NORMAL)
+    public function write($messages, bool $newline = false, int $options = self::OUTPUT_NORMAL)
     {
         $types = self::OUTPUT_NORMAL | self::OUTPUT_RAW | self::OUTPUT_PLAIN;
         $type = $types & $options ?: self::OUTPUT_NORMAL;
@@ -90,7 +90,7 @@ final class KernelOutput implements OutputInterface
      * @param string|array $messages The message as an array of lines of a single string
      * @param int $options A bitmask of options (one of the OUTPUT or VERBOSITY constants), 0 is considered the same as self::OUTPUT_NORMAL | self::VERBOSITY_NORMAL
      */
-    public function writeln($messages, $options = 0)
+    public function writeln($messages, int $options = 0)
     {
         $this->write($messages, true, $options);
     }
@@ -100,7 +100,7 @@ final class KernelOutput implements OutputInterface
      *
      * @param int $level The level of verbosity (one of the VERBOSITY constants)
      */
-    public function setVerbosity($level)
+    public function setVerbosity(int $level)
     {
         // TODO: Implement setVerbosity() method.
     }
@@ -110,7 +110,7 @@ final class KernelOutput implements OutputInterface
      *
      * @return int The current level of verbosity (one of the VERBOSITY constants)
      */
-    public function getVerbosity()
+    public function getVerbosity(): int
     {
         return self::VERBOSITY_NORMAL;
     }
@@ -120,7 +120,7 @@ final class KernelOutput implements OutputInterface
      *
      * @return bool true if verbosity is set to VERBOSITY_QUIET, false otherwise
      */
-    public function isQuiet()
+    public function isQuiet(): bool
     {
         return false;
     }
@@ -130,7 +130,7 @@ final class KernelOutput implements OutputInterface
      *
      * @return bool true if verbosity is set to VERBOSITY_VERBOSE, false otherwise
      */
-    public function isVerbose()
+    public function isVerbose(): bool
     {
         return false;
     }
@@ -140,7 +140,7 @@ final class KernelOutput implements OutputInterface
      *
      * @return bool true if verbosity is set to VERBOSITY_VERY_VERBOSE, false otherwise
      */
-    public function isVeryVerbose()
+    public function isVeryVerbose(): bool
     {
         return false;
     }
@@ -150,7 +150,7 @@ final class KernelOutput implements OutputInterface
      *
      * @return bool true if verbosity is set to VERBOSITY_DEBUG, false otherwise
      */
-    public function isDebug()
+    public function isDebug(): bool
     {
         return false;
     }
@@ -159,7 +159,7 @@ final class KernelOutput implements OutputInterface
      * Sets the decorated flag.
      * @param bool $decorated Whether to decorate the messages
      */
-    public function setDecorated($decorated)
+    public function setDecorated(bool $decorated)
     {
         // Interface compliance
     }
@@ -169,7 +169,7 @@ final class KernelOutput implements OutputInterface
      *
      * @return bool true if the output will decorate messages, false otherwise
      */
-    public function isDecorated()
+    public function isDecorated(): bool
     {
         return true;
     }
@@ -187,7 +187,7 @@ final class KernelOutput implements OutputInterface
      * Returns current output formatter instance.
      * @return OutputFormatterInterface
      */
-    public function getFormatter()
+    public function getFormatter(): OutputFormatterInterface
     {
         return $this->formatter;
     }

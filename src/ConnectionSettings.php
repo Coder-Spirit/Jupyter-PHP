@@ -3,7 +3,7 @@
 /*
  * This file is part of Jupyter-PHP.
  *
- * (c) 2015-2016 Litipk
+ * (c) 2015-2017 Litipk
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,7 +17,7 @@ final class ConnectionSettings
     /**
      * @return array[string]mixed
      */
-    public static function get()
+    public static function get(): array
     {
         global $argv;
         if (!isset($argv) || empty($argv)) {
@@ -47,7 +47,7 @@ final class ConnectionSettings
      * @param null|array $connectionSettings
      * @return array[string]string
      */
-    public static function getConnectionUris(array $connectionSettings = null)
+    public static function getConnectionUris(array $connectionSettings = null): array
     {
         if (null === $connectionSettings) {
             $connectionSettings = self::get();

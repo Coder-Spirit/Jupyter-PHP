@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of Jupyter-PHP.
+ *
+ * (c) 2015-2017 Litipk
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Litipk\JupyterPHP\Actions;
 
@@ -35,13 +43,7 @@ final class ExecuteAction implements Action
     /** @var int */
     private $execCount;
 
-    /**
-     * ExecuteAction constructor.
-     * @param JupyterBroker $broker
-     * @param SocketWrapper $iopubSocket
-     * @param SocketWrapper $shellSocket
-     * @param Shell $shellSoul
-     */
+
     public function __construct(
         JupyterBroker $broker, SocketWrapper $iopubSocket, SocketWrapper $shellSocket, Shell $shellSoul
     )
@@ -62,14 +64,10 @@ final class ExecuteAction implements Action
         $this->execCount = isset($content->execution_count) ? $content->execution_count : 0;
         $this->code = $content['code'];
 
-        $closure = $this->getClosure();
-        $closure();
+        ($this->getClosure())();
     }
 
-    /**
-     * @param string $message
-     */
-    public function notifyMessage($message)
+    public function notifyMessage(string $message)
     {
         $this->broker->send($this->shellSocket, 'execute_reply', ['status' => 'ok'], $this->header);
         $this->broker->send($this->iopubSocket, 'stream',  ['name' => 'stdout', 'data' => $message], $this->header);
@@ -82,10 +80,7 @@ final class ExecuteAction implements Action
         $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'idle'], $this->header);
     }
 
-    /**
-     * @return callable
-     */
-    private function getClosure()
+    private function getClosure(): callable
     {
         $closure = function () {
             extract($this->shellSoul->getScopeVariables());
