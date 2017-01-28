@@ -30,7 +30,7 @@ final class JupyterBroker
     private $hashAlgorithm;
 
     /** @var UuidInterface */
-    private $sesssionId;
+    private $sessionId;
 
     /** @var null|LoggerInterface */
     private $logger;
@@ -47,7 +47,7 @@ final class JupyterBroker
         $this->key = $key;
         $this->signatureScheme = $signatureScheme;
         $this->hashAlgorithm = preg_split('/-/', $signatureScheme)[1];
-        $this->sesssionId = $sessionId;
+        $this->sessionId = $sessionId;
         $this->logger = $logger;
     }
 
@@ -93,7 +93,7 @@ final class JupyterBroker
             'date'     => (new \DateTime('NOW'))->format('c'),
             'msg_id'   => Uuid::uuid4()->toString(),
             'username' => "kernel",
-            'session'  => $this->sesssionId->toString(),
+            'session'  => $this->sessionId->toString(),
             'msg_type' => $msgType,
         ];
     }
