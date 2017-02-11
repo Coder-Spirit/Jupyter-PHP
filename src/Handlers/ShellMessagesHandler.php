@@ -75,7 +75,7 @@ final class ShellMessagesHandler
 
         $this->logger->debug('Received message', [
             'processId'    => getmypid(),
-            'zmqId'        => $zmqId,
+            'zmqId'        => htmlentities($zmqId, ENT_COMPAT, "UTF-8"),
             'delim'        => $delim,
             'hmac'         => $hmac,
             'header'       => $header,
@@ -85,13 +85,13 @@ final class ShellMessagesHandler
         ]);
 
         if ('kernel_info_request' === $header['msg_type']) {
-            $this->kernelInfoAction->call($header, $content);
+            $this->kernelInfoAction->call($header, $content, $zmqId);
         } elseif ('execute_request' === $header['msg_type']) {
-            $this->executeAction->call($header, $content);
+            $this->executeAction->call($header, $content, $zmqId);
         } elseif ('history_request' === $header['msg_type']) {
-            $this->historyAction->call($header, $content);
+            $this->historyAction->call($header, $content, $zmqId);
         } elseif ('shutdown_request' === $header['msg_type']) {
-            $this->shutdownAction->call($header, $content);
+            $this->shutdownAction->call($header, $content, $zmqId);
         } elseif ('comm_open' === $header['msg_type']) {
             // TODO: Research about what should be done.
         } else {

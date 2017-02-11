@@ -52,7 +52,7 @@ final class ExecuteAction implements Action
         $this->shellSoul = $shellSoul;
     }
 
-    public function call(array $header, array $content)
+    public function call(array $header, array $content, $zmqId = null)
     {
         $this->broker->send(
             $this->iopubSocket, 'status', ['execution_state' => 'busy'], $header

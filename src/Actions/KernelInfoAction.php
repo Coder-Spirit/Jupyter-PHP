@@ -32,7 +32,7 @@ final class KernelInfoAction implements Action
         $this->iopubSocket = $iopubSocket;
     }
 
-    public function call(array $header, array $content)
+    public function call(array $header, array $content, $zmqId = null)
     {
         // TODO: Implement call() method.
 

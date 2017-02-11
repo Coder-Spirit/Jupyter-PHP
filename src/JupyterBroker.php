@@ -57,11 +57,16 @@ final class JupyterBroker
      * @param array $content
      * @param array $parentHeader
      * @param array $metadata
+     * @param string $zmqId
      */
     public function send(
-        SocketWrapper $stream, $msgType, array $content = [], array $parentHeader = [], array $metadata = []
-    )
-    {
+        SocketWrapper $stream,
+        $msgType,
+        array $content = [],
+        array $parentHeader = [],
+        array $metadata = [],
+        $zmqId = null
+    ) {
         $header = $this->createHeader($msgType);
 
         $msgDef = [
@@ -71,10 +76,16 @@ final class JupyterBroker
             json_encode(empty($content) ? new \stdClass : $content),
         ];
 
+        if ($zmqId !== null) {
+            $finalMsg = [$zmqId];
+        } else {
+            $finalMsg = [];
+        }
+
         $finalMsg = array_merge(
+            $finalMsg,
             ['<IDS|MSG>', $this->sign($msgDef)],
-            $msgDef
-        );
+            $msgDef);
 
         if (null !== $this->logger) {
             $this->logger->debug('Sent message', ['processId' => getmypid(), 'message' => $finalMsg]);
@@ -90,15 +101,17 @@ final class JupyterBroker
     private function createHeader($msgType)
     {
         return [
-            'date'     => (new \DateTime('NOW'))->format('c'),
-            'msg_id'   => Uuid::uuid4()->toString(),
+            'date' => (new \DateTime('NOW'))->format('c'),
+            'msg_id' => Uuid::uuid4()->toString(),
             'username' => "kernel",
-            'session'  => $this->sesssionId->toString(),
+            'session' => $this->sesssionId->toString(),
             'msg_type' => $msgType,
+            'version' => '5.0',
         ];
     }
 
-    private function sign(array $message_list) {
+    private function sign(array $message_list)
+    {
         $hm = hash_init(
             $this->hashAlgorithm,
             HASH_HMAC,
