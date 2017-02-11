@@ -76,7 +76,7 @@ final class JupyterBroker
             json_encode(empty($content) ? new \stdClass : $content),
         ];
 
-        if ($zmqId !== null) {
+        if (null !== $zmqId) {
             $finalMsg = [$zmqId];
         } else {
             $finalMsg = [];
