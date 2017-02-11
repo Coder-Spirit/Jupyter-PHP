@@ -3,7 +3,7 @@
 /*
  * This file is part of Jupyter-PHP.
  *
- * (c) 2015-2016 Litipk
+ * (c) 2015-2017 Litipk
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -26,7 +26,6 @@ use React\ZMQ\SocketWrapper;
 
 /**
  * Class KernelCore (no pun intended)
- * @package Litipk\JupyterPHP
  */
 final class KernelCore
 {
@@ -50,12 +49,7 @@ final class KernelCore
     /** @var SocketWrapper|\ZMQSocket */
     private $shellSocket;
 
-    /**
-     * KernelCore constructor.
-     * @param JupyterBroker $jupyterBroker
-     * @param array $connUris [string]string $connUris
-     * @param Logger $logger
-     */
+
     public function __construct(JupyterBroker $jupyterBroker, array $connUris, Logger $logger)
     {
         $this->broker = $jupyterBroker;
@@ -65,9 +59,6 @@ final class KernelCore
         $this->registerHandlers();
     }
 
-    /**
-     *
-     */
     public function run()
     {
         $this->reactLoop->run();
@@ -100,9 +91,6 @@ final class KernelCore
         $this->shellSocket->bind($connUris['shell']);
     }
 
-    /**
-     *
-     */
     private function registerHandlers()
     {
         $this->hbSocket->on(

@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of Jupyter-PHP.
+ *
+ * (c) 2015-2017 Litipk
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Litipk\JupyterPHP\Handlers;
 
@@ -34,13 +42,7 @@ final class ShellMessagesHandler
     /** @var Logger */
     private $logger;
 
-    /**
-     * ShellMessagesHandler constructor.
-     * @param JupyterBroker $broker
-     * @param SocketWrapper $iopubSocket
-     * @param SocketWrapper $shellSocket
-     * @param Logger $logger
-     */
+
     public function __construct(
         JupyterBroker $broker,
         SocketWrapper $iopubSocket,
@@ -63,9 +65,6 @@ final class ShellMessagesHandler
         $this->shellSoul->setOutput(new KernelOutput($this->executeAction, $this->logger->withName('KernelOutput')));
     }
 
-    /**
-     * @param $msg
-     */
     public function __invoke(array $msg)
     {
         list($zmqId, $delim, $hmac, $header, $parentHeader, $metadata, $content) = $msg;

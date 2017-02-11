@@ -3,7 +3,7 @@
 /*
  * This file is part of Jupyter-PHP.
  *
- * (c) 2015-2016 Litipk
+ * (c) 2015-2017 Litipk
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -30,35 +30,21 @@ final class JupyterBroker
     private $hashAlgorithm;
 
     /** @var UuidInterface */
-    private $sesssionId;
+    private $sessionId;
 
     /** @var null|LoggerInterface */
     private $logger;
 
-    /**
-     * JupyterBroker constructor.
-     * @param string $key
-     * @param string $signatureScheme
-     * @param UuidInterface $sessionId
-     * @param null|LoggerInterface $logger
-     */
+
     public function __construct($key, $signatureScheme, UuidInterface $sessionId, LoggerInterface $logger = null)
     {
         $this->key = $key;
         $this->signatureScheme = $signatureScheme;
         $this->hashAlgorithm = preg_split('/-/', $signatureScheme)[1];
-        $this->sesssionId = $sessionId;
+        $this->sessionId = $sessionId;
         $this->logger = $logger;
     }
 
-    /**
-     * @param SocketWrapper $stream
-     * @param string $msgType
-     * @param array $content
-     * @param array $parentHeader
-     * @param array $metadata
-     * @param string $zmqId
-     */
     public function send(
         SocketWrapper $stream,
         $msgType,
@@ -94,23 +80,19 @@ final class JupyterBroker
         $stream->send($finalMsg);
     }
 
-    /**
-     * @param string $msgType
-     * @return array
-     */
-    private function createHeader($msgType)
+    private function createHeader(string $msgType): array
     {
         return [
-            'date' => (new \DateTime('NOW'))->format('c'),
-            'msg_id' => Uuid::uuid4()->toString(),
+            'date'     => (new \DateTime('NOW'))->format('c'),
+            'msg_id'   => Uuid::uuid4()->toString(),
             'username' => "kernel",
-            'session' => $this->sesssionId->toString(),
+            'session'  => $this->sessionId->toString(),
             'msg_type' => $msgType,
-            'version' => '5.0',
+            'version'  => '5.0',
         ];
     }
 
-    private function sign(array $message_list)
+    private function sign(array $message_list): string
     {
         $hm = hash_init(
             $this->hashAlgorithm,
