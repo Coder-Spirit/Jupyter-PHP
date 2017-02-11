@@ -3,14 +3,12 @@
 
 namespace Litipk\JupyterPHP\Actions;
 
-
 use Litipk\JupyterPHP\JupyterBroker;
 use Psy\Exception\BreakException;
 use Psy\Exception\ThrowUpException;
 use Psy\ExecutionLoop\Loop;
 use Psy\Shell;
 use React\ZMQ\SocketWrapper;
-
 
 final class ExecuteAction implements Action
 {
@@ -31,9 +29,12 @@ final class ExecuteAction implements Action
 
     /** @var string */
     private $code;
-    
+
+    /** @var bool */
+    private $silent;
+
     /** @var int */
-    private $execCount;
+    private $execCount = 0;
 
     /**
      * ExecuteAction constructor.
@@ -43,9 +44,11 @@ final class ExecuteAction implements Action
      * @param Shell $shellSoul
      */
     public function __construct(
-        JupyterBroker $broker, SocketWrapper $iopubSocket, SocketWrapper $shellSocket, Shell $shellSoul
-    )
-    {
+        JupyterBroker $broker,
+        SocketWrapper $iopubSocket,
+        SocketWrapper $shellSocket,
+        Shell $shellSoul
+    ) {
         $this->broker = $broker;
         $this->iopubSocket = $iopubSocket;
         $this->shellSocket = $shellSocket;
@@ -54,16 +57,36 @@ final class ExecuteAction implements Action
 
     public function call(array $header, array $content, $zmqId = null)
     {
-        $this->broker->send(
-            $this->iopubSocket, 'status', ['execution_state' => 'busy'], $header
-        );
+        $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'busy'], $header);
 
         $this->header = $header;
-        $this->execCount = isset($content->execution_count) ? $content->execution_count : 0;
         $this->code = $content['code'];
+        $this->silent = $content['silent'];
+
+        if (!$this->silent) {
+            $this->execCount = $this->execCount + 1;
+
+            $this->broker->send(
+                $this->iopubSocket,
+                'execute_input',
+                ['code' => $this->code, 'execution_count' => $this->execCount],
+                $this->header
+            );
+        }
 
         $closure = $this->getClosure();
         $closure();
+
+        $replyContent = [
+            'status' => 'ok',
+            'execution_count' => $this->execCount,
+            'payload' => [],
+            'user_expressions' => new \stdClass
+        ];
+
+        $this->broker->send($this->shellSocket, 'execute_reply', $replyContent, $this->header, [], $zmqId);
+
+        $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'idle'], $this->header);
     }
 
     /**
@@ -71,15 +94,13 @@ final class ExecuteAction implements Action
      */
     public function notifyMessage($message)
     {
-        $this->broker->send($this->shellSocket, 'execute_reply', ['status' => 'ok'], $this->header);
-        $this->broker->send($this->iopubSocket, 'stream',  ['name' => 'stdout', 'data' => $message], $this->header);
+        $this->broker->send($this->iopubSocket, 'stream', ['name' => 'stdout', 'text' => $message], $this->header);
         $this->broker->send(
             $this->iopubSocket,
             'execute_result',
-            ['execution_count' => $this->execCount + 1, 'data' => $message, 'metadata' => new \stdClass],
+            ['execution_count' => $this->execCount, 'data' => ['text/plain' => $message], 'metadata' => new \stdClass],
             $this->header
         );
-        $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'idle'], $this->header);
     }
 
     /**
