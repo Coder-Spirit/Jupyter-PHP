@@ -60,7 +60,7 @@ final class KernelCore
     {
         $this->broker = $jupyterBroker;
         $this->logger = $logger;
-        
+
         $this->initSockets($connUris);
         $this->registerHandlers();
     }
@@ -74,7 +74,7 @@ final class KernelCore
     }
 
     /**
-     * @param array[string]string $connUris
+     * @param array [string]string $connUris
      */
     private function initSockets(array $connUris)
     {
@@ -111,7 +111,7 @@ final class KernelCore
         );
         $this->hbSocket->on(
             'messages',
-            new HbMessagesHandler($this->logger->withName('HbMessagesHandler'))
+            new HbMessagesHandler($this->hbSocket, $this->logger->withName('HbMessagesHandler'))
         );
         $this->iopubSocket->on(
             'messages',
