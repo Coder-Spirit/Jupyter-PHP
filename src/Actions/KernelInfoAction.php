@@ -11,10 +11,8 @@
 
 namespace Litipk\JupyterPHP\Actions;
 
-
 use Litipk\JupyterPHP\JupyterBroker;
 use React\ZMQ\SocketWrapper;
-
 
 final class KernelInfoAction implements Action
 {
@@ -35,32 +33,30 @@ final class KernelInfoAction implements Action
         $this->iopubSocket = $iopubSocket;
     }
 
-    public function call(array $header, array $content)
+    public function call(array $header, array $content, $zmqId = null)
     {
-        // TODO: Implement call() method.
+        $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'busy'], $header);
 
-        $this->broker->send(
-            $this->iopubSocket, 'status', ['execution_state' => 'busy'], $header
-        );
-        
         $this->broker->send(
             $this->shellSocket,
             'kernel_info_reply',
             [
-                'protocol_version' => '5.0.0',
+                'protocol_version' => '5.0',
                 'implementation' => 'jupyter-php',
                 'implementation_version' => '0.1.0',
                 'banner' => 'Jupyter-PHP Kernel',
-                'language' => 'PHP',
-                'language_version' => phpversion(),
                 'language_info' => [
                     'name' => 'PHP',
                     'version' => phpversion(),
                     'mimetype' => 'text/x-php',
                     'file_extension' => '.php',
-                    'pygments_lexer' => 'PHP'
-                ]
-            ]
+                    'pygments_lexer' => 'PHP',
+                ],
+                'status' => 'ok',
+            ],
+            $header,
+            [],
+            $zmqId
         );
 
         $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'idle'], $header);

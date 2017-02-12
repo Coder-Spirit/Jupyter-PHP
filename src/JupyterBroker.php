@@ -46,9 +46,13 @@ final class JupyterBroker
     }
 
     public function send(
-        SocketWrapper $stream, $msgType, array $content = [], array $parentHeader = [], array $metadata = []
-    )
-    {
+        SocketWrapper $stream,
+        $msgType,
+        array $content = [],
+        array $parentHeader = [],
+        array $metadata = [],
+        $zmqId = null
+    ) {
         $header = $this->createHeader($msgType);
 
         $msgDef = [
@@ -58,10 +62,16 @@ final class JupyterBroker
             json_encode(empty($content) ? new \stdClass : $content),
         ];
 
+        if (null !== $zmqId) {
+            $finalMsg = [$zmqId];
+        } else {
+            $finalMsg = [];
+        }
+
         $finalMsg = array_merge(
+            $finalMsg,
             ['<IDS|MSG>', $this->sign($msgDef)],
-            $msgDef
-        );
+            $msgDef);
 
         if (null !== $this->logger) {
             $this->logger->debug('Sent message', ['processId' => getmypid(), 'message' => $finalMsg]);
@@ -78,6 +88,7 @@ final class JupyterBroker
             'username' => "kernel",
             'session'  => $this->sessionId->toString(),
             'msg_type' => $msgType,
+            'version'  => '5.0',
         ];
     }
 
