@@ -74,7 +74,7 @@ final class JupyterBroker
             $msgDef);
 
         if (null !== $this->logger) {
-            $this->logger->debug('Sent message', ['processId' => getmypid(), 'message' => $finalMsg]);
+            $this->logger->debug('Sending message', ['processId' => getmypid(), 'message' => $finalMsg]);
         }
 
         $stream->send($finalMsg);
