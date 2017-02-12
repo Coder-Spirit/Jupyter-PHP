@@ -33,7 +33,7 @@ final class HbMessagesHandler
     {
         $this->logger->debug('Received message', ['processId' => getmypid(), 'msg' => $msg]);
 
-        if (['ping'] == $msg) {
+        if (['ping'] === $msg) {
             $this->hbSocket->send($msg);
         } else {
             $this->logger->error('Unknown message', ['processId' => getmypid(), 'msg' => $msg]);
