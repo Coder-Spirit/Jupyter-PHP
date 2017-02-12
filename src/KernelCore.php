@@ -89,6 +89,8 @@ final class KernelCore
 
         $this->shellSocket = $reactZmqContext->getSocket(\ZMQ::SOCKET_ROUTER);
         $this->shellSocket->bind($connUris['shell']);
+
+        $this->logger->debug('Initialized sockets', ['processId' => getmypid()]);
     }
 
     private function registerHandlers()
@@ -114,5 +116,7 @@ final class KernelCore
                 $this->logger->withName('ShellMessagesHandler')
             )
         );
+
+        $this->logger->debug('Registered handlers', ['processId' => getmypid()]);
     }
 }
