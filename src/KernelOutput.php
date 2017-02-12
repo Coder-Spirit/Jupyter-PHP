@@ -54,7 +54,7 @@ final class KernelOutput implements OutputInterface
      * @param bool $newline Whether to add a newline
      * @param int $options A bitmask of options (one of the OUTPUT or VERBOSITY constants), 0 is considered the same as self::OUTPUT_NORMAL | self::VERBOSITY_NORMAL
      */
-    public function write($messages, bool $newline = false, int $options = self::OUTPUT_NORMAL)
+    public function write($messages, $newline = false, $options = self::OUTPUT_NORMAL)
     {
         $types = self::OUTPUT_NORMAL | self::OUTPUT_RAW | self::OUTPUT_PLAIN;
         $type = $types & $options ?: self::OUTPUT_NORMAL;
@@ -90,7 +90,7 @@ final class KernelOutput implements OutputInterface
      * @param string|array $messages The message as an array of lines of a single string
      * @param int $options A bitmask of options (one of the OUTPUT or VERBOSITY constants), 0 is considered the same as self::OUTPUT_NORMAL | self::VERBOSITY_NORMAL
      */
-    public function writeln($messages, int $options = 0)
+    public function writeln($messages, $options = 0)
     {
         $this->write($messages, true, $options);
     }
@@ -100,7 +100,7 @@ final class KernelOutput implements OutputInterface
      *
      * @param int $level The level of verbosity (one of the VERBOSITY constants)
      */
-    public function setVerbosity(int $level)
+    public function setVerbosity($level)
     {
         // TODO: Implement setVerbosity() method.
     }
@@ -159,7 +159,7 @@ final class KernelOutput implements OutputInterface
      * Sets the decorated flag.
      * @param bool $decorated Whether to decorate the messages
      */
-    public function setDecorated(bool $decorated)
+    public function setDecorated($decorated)
     {
         // Interface compliance
     }
