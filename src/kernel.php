@@ -63,6 +63,12 @@ try {
     $connectionSettings = ConnectionSettings::get();
     $connUris = ConnectionSettings::getConnectionUris($connectionSettings);
 
+    $logger->debug('Connection settings', [
+        'processId' => getmypid(),
+        'connSettings' => $connectionSettings,
+        'connUris' => $connUris
+    ]);
+
     $kernelCore = new KernelCore(
         new JupyterBroker(
             $connectionSettings['key'],
