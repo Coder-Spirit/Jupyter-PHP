@@ -92,7 +92,6 @@ final class ExecuteAction implements Action
 
     public function notifyMessage(string $message)
     {
-        $this->broker->send($this->iopubSocket, 'stream', ['name' => 'stdout', 'text' => $message], $this->header);
         $this->broker->send(
             $this->iopubSocket,
             'execute_result',
