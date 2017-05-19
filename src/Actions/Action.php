@@ -14,5 +14,5 @@ namespace Litipk\JupyterPHP\Actions;
 
 interface Action
 {
-    public function call(array $header, array $content, $zmqId = null);
+    public function call(array $header, array $content, $zmqIds = []);
 }

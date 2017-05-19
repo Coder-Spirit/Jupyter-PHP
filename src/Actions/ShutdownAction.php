@@ -32,12 +32,12 @@ final class ShutdownAction implements Action
         $this->shellSocket = $shellSocket;
     }
 
-    public function call(array $header, array $content, $zmqId = null)
+    public function call(array $header, array $content, $zmqIds = [])
     {
         $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'busy'], $header);
 
         $replyContent = ['restart' => $content['restart']];
-        $this->broker->send($this->shellSocket, 'shutdown_reply', $replyContent, $header, [], $zmqId);
+        $this->broker->send($this->shellSocket, 'shutdown_reply', $replyContent, $header, [], $zmqIds);
 
         $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'idle'], $header);
     }

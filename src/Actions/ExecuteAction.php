@@ -57,7 +57,7 @@ final class ExecuteAction implements Action
         $this->shellSoul = $shellSoul;
     }
 
-    public function call(array $header, array $content, $zmqId = null)
+    public function call(array $header, array $content, $zmqIds = [])
     {
         $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'busy'], $header);
 
@@ -85,7 +85,7 @@ final class ExecuteAction implements Action
             'user_expressions' => new \stdClass
         ];
 
-        $this->broker->send($this->shellSocket, 'execute_reply', $replyContent, $this->header, [], $zmqId);
+        $this->broker->send($this->shellSocket, 'execute_reply', $replyContent, $this->header, [], $zmqIds);
 
         $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'idle'], $this->header);
     }

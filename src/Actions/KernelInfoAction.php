@@ -33,7 +33,7 @@ final class KernelInfoAction implements Action
         $this->iopubSocket = $iopubSocket;
     }
 
-    public function call(array $header, array $content, $zmqId = null)
+    public function call(array $header, array $content, $zmqIds = [])
     {
         $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'busy'], $header);
 
@@ -56,7 +56,7 @@ final class KernelInfoAction implements Action
             ],
             $header,
             [],
-            $zmqId
+            $zmqIds
         );
 
         $this->broker->send($this->iopubSocket, 'status', ['execution_state' => 'idle'], $header);
