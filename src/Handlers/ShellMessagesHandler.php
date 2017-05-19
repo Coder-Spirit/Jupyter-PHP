@@ -67,8 +67,6 @@ final class ShellMessagesHandler
 
     public function __invoke(array $msg)
     {
-        $this->logger->debug('Received message');
-
         // Read ZMQ IDs until we reach the delimiter
         $zmqIds = array();
         while (!empty($msg)) {
