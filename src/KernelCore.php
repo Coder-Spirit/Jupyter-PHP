@@ -11,7 +11,6 @@
 
 namespace Litipk\JupyterPHP;
 
-
 use Litipk\JupyterPHP\Handlers\HbErrorHandler;
 use Litipk\JupyterPHP\Handlers\HbMessagesHandler;
 use Litipk\JupyterPHP\Handlers\IOPubMessagesHandler;
@@ -22,7 +21,6 @@ use Monolog\Logger;
 use React\EventLoop\Factory as ReactFactory;
 use React\ZMQ\Context as ReactZmqContext;
 use React\ZMQ\SocketWrapper;
-
 
 /**
  * Class KernelCore (no pun intended)

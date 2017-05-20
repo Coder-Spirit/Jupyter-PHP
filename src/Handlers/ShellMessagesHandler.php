@@ -16,10 +16,10 @@ use Litipk\JupyterPHP\Actions\HistoryAction;
 use Litipk\JupyterPHP\Actions\KernelInfoAction;
 use Litipk\JupyterPHP\Actions\ShutdownAction;
 use Litipk\JupyterPHP\JupyterBroker;
+use Litipk\JupyterPHP\Shell;
 
 use Litipk\JupyterPHP\KernelOutput;
 use Monolog\Logger;
-use Psy\Shell;
 use React\ZMQ\SocketWrapper;
 
 final class ShellMessagesHandler
