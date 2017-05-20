@@ -109,10 +109,7 @@ final class ExecuteAction implements Action
                 $this->shellSoul->addCode($this->code);
 
                 // evaluate the current code buffer
-                ob_start(
-                    [$this->shellSoul, 'writeStdout'],
-                    version_compare(PHP_VERSION, '5.4', '>=') ? 1 : 2
-                );
+                ob_start([$this->shellSoul, 'writeStdout'], 1);
 
                 set_error_handler([$this->shellSoul, 'handleError']);
                 $_ = eval($this->shellSoul->flushCode() ?: Loop::NOOP_INPUT);
