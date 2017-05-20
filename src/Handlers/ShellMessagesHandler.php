@@ -67,15 +67,23 @@ final class ShellMessagesHandler
 
     public function __invoke(array $msg)
     {
-        list($zmqId, $delim, $hmac, $header, $parentHeader, $metadata, $content) = $msg;
+        // Read ZMQ IDs until we reach the delimiter
+        $zmqIds = array();
+        while (!empty($msg)) {
+            $item = array_shift($msg);
+            if ($item === '<IDS|MSG>') break;
+            else array_push($zmqIds, $item);
+        }
+
+        // Read the remaining items
+        list($hmac, $header, $parentHeader, $metadata, $content) = $msg;
 
         $header = json_decode($header, true);
         $content = json_decode($content, true);
 
         $this->logger->debug('Received message', [
             'processId' => getmypid(),
-            'zmqId' => htmlentities($zmqId, ENT_COMPAT, "UTF-8"),
-            'delim' => $delim,
+            'zmqIds' => htmlentities(implode(", ", $zmqIds), ENT_COMPAT, "UTF-8"),
             'hmac' => $hmac,
             'header' => $header,
             'parentHeader' => $parentHeader,
@@ -84,13 +92,13 @@ final class ShellMessagesHandler
         ]);
 
         if ('kernel_info_request' === $header['msg_type']) {
-            $this->kernelInfoAction->call($header, $content, $zmqId);
+            $this->kernelInfoAction->call($header, $content, $zmqIds);
         } elseif ('execute_request' === $header['msg_type']) {
-            $this->executeAction->call($header, $content, $zmqId);
+            $this->executeAction->call($header, $content, $zmqIds);
         } elseif ('history_request' === $header['msg_type']) {
-            $this->historyAction->call($header, $content, $zmqId);
+            $this->historyAction->call($header, $content, $zmqIds);
         } elseif ('shutdown_request' === $header['msg_type']) {
-            $this->shutdownAction->call($header, $content, $zmqId);
+            $this->shutdownAction->call($header, $content, $zmqIds);
         } elseif ('comm_open' === $header['msg_type']) {
             // TODO: Research about what should be done.
         } else {

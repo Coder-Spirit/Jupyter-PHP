@@ -51,7 +51,7 @@ final class JupyterBroker
         array $content = [],
         array $parentHeader = [],
         array $metadata = [],
-        $zmqId = null
+        $zmqIds = []
     ) {
         $header = $this->createHeader($msgType);
 
@@ -62,11 +62,7 @@ final class JupyterBroker
             json_encode(empty($content) ? new \stdClass : $content),
         ];
 
-        if (null !== $zmqId) {
-            $finalMsg = [$zmqId];
-        } else {
-            $finalMsg = [];
-        }
+        $finalMsg = $zmqIds;
 
         $finalMsg = array_merge(
             $finalMsg,
