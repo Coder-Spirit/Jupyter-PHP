@@ -13,20 +13,22 @@
 namespace Litipk\JupyterPHP;
 
 define(
-    'PATH_TO_VENDOR_AS_LIBRARY',
-    __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..'
+    'PATH_TO_VENDOR_AUTOLOADER_AS_LIBRARY',
+    __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' .
+    DIRECTORY_SEPARATOR . 'autoload.php'
 );
 
 define(
-    'PATH_TO_VENDOR_AS_PROJECT',
-    __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor'
+    'PATH_TO_VENDOR_AUTOLOADER_AS_PROJECT',
+    __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' .
+    DIRECTORY_SEPARATOR . 'autoload.php'
 );
 
-$pathToVendor = \file_exists(PATH_TO_VENDOR_AS_LIBRARY)
-    ? PATH_TO_VENDOR_AS_LIBRARY
-    : PATH_TO_VENDOR_AS_PROJECT;
+$pathToVendorAutoloader = \file_exists(PATH_TO_VENDOR_AUTOLOADER_AS_LIBRARY)
+    ? PATH_TO_VENDOR_AUTOLOADER_AS_LIBRARY
+    : PATH_TO_VENDOR_AUTOLOADER_AS_PROJECT;
 
-require ($pathToVendor . DIRECTORY_SEPARATOR . 'autoload.php');
+require ($pathToVendorAutoloader);
 
 
 use Litipk\JupyterPHP\System\System;
