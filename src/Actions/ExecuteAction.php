@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP\Actions;
+namespace JupyterPHP\Actions;
 
-use Litipk\JupyterPHP\JupyterBroker;
+use JupyterPHP\JupyterBroker;
 use Psy\Exception\BreakException;
 use Psy\Exception\ThrowUpException;
 use Psy\ExecutionLoop\Loop;
@@ -20,7 +20,7 @@ use React\ZMQ\SocketWrapper;
 
 final class ExecuteAction implements Action
 {
-    /** @var JupyterBroker */
+    /** @var \JupyterPHP\JupyterBroker */
     private $broker;
 
     /** @var SocketWrapper */

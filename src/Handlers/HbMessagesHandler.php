@@ -9,9 +9,8 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP\Handlers;
+namespace JupyterPHP\Handlers;
 
-use Litipk\JupyterPHP\JupyterBroker;
 use Monolog\Logger;
 use React\ZMQ\SocketWrapper;
 

@@ -9,11 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP\Handlers;
-
+namespace JupyterPHP\Handlers;
 
 use Monolog\Logger;
-
 
 class HbErrorHandler
 {

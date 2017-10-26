@@ -16,7 +16,7 @@
 
     },
     "autoload": {
-        "psr-4": { "Litipk\\JupyterPHP\\": "src/"}
+        "psr-4": { "JupyterPHP\\": "src/"}
     },
     "scripts": {
 

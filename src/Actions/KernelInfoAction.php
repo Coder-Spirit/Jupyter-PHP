@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP\Actions;
+namespace JupyterPHP\Actions;
 
-use Litipk\JupyterPHP\JupyterBroker;
+use JupyterPHP\JupyterBroker;
 use React\ZMQ\SocketWrapper;
 
 final class KernelInfoAction implements Action

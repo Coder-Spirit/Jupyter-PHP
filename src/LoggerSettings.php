@@ -9,11 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP;
-
+namespace JupyterPHP;
 
 use Monolog\Logger;
-
 
 final class LoggerSettings
 {

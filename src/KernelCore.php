@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP;
+namespace JupyterPHP;
 
-use Litipk\JupyterPHP\Handlers\HbErrorHandler;
-use Litipk\JupyterPHP\Handlers\HbMessagesHandler;
-use Litipk\JupyterPHP\Handlers\IOPubMessagesHandler;
-use Litipk\JupyterPHP\Handlers\ShellMessagesHandler;
+use JupyterPHP\Handlers\HbErrorHandler;
+use JupyterPHP\Handlers\HbMessagesHandler;
+use JupyterPHP\Handlers\IOPubMessagesHandler;
+use JupyterPHP\Handlers\ShellMessagesHandler;
 
 use Monolog\Logger;
 

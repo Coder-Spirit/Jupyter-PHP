@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP;
+namespace JupyterPHP;
 
 
 final class ConnectionSettings

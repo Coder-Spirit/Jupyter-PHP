@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP\Handlers;
+namespace JupyterPHP\Handlers;
 
-use Litipk\JupyterPHP\Actions\ExecuteAction;
-use Litipk\JupyterPHP\Actions\HistoryAction;
-use Litipk\JupyterPHP\Actions\KernelInfoAction;
-use Litipk\JupyterPHP\Actions\ShutdownAction;
-use Litipk\JupyterPHP\JupyterBroker;
-use Litipk\JupyterPHP\Shell;
+use JupyterPHP\Actions\ExecuteAction;
+use JupyterPHP\Actions\HistoryAction;
+use JupyterPHP\Actions\KernelInfoAction;
+use JupyterPHP\Actions\ShutdownAction;
+use JupyterPHP\JupyterBroker;
+use JupyterPHP\Shell;
 
-use Litipk\JupyterPHP\KernelOutput;
+use JupyterPHP\KernelOutput;
 use Monolog\Logger;
 use React\ZMQ\SocketWrapper;
 
@@ -33,7 +33,7 @@ final class ShellMessagesHandler
     /** @var KernelInfoAction */
     private $kernelInfoAction;
 
-    /** @var ShutdownAction */
+    /** @var \JupyterPHP\Actions\ShutdownAction */
     private $shutdownAction;
 
     /** @var Shell */

@@ -31,7 +31,11 @@ $pathToVendorAutoloader = \file_exists(PATH_TO_VENDOR_AUTOLOADER_AS_LIBRARY)
 require ($pathToVendorAutoloader);
 
 
-use Litipk\JupyterPHP\System\System;
+use JupyterPHP\ConnectionSettings;
+use JupyterPHP\JupyterBroker;
+use JupyterPHP\KernelCore;
+use JupyterPHP\LoggerSettings;
+use JupyterPHP\System\System;
 use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\GroupHandler;

@@ -9,20 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP;
+namespace JupyterPHP;
 
-
-use Litipk\JupyterPHP\Actions\ExecuteAction;
+use JupyterPHP\Actions\ExecuteAction;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 final class KernelOutput implements OutputInterface
 {
-    /** @var ExecuteAction */
+    /** @var \JupyterPHP\Actions\ExecuteAction */
     private $executeAction;
     
     /** @var LoggerInterface */
@@ -33,7 +31,7 @@ final class KernelOutput implements OutputInterface
 
     /**
      * KernelOutput constructor.
-     * @param ExecuteAction $executeAction
+     * @param \JupyterPHP\Actions\ExecuteAction $executeAction
      * @param LoggerInterface $logger
      */
     public function __construct(ExecuteAction $executeAction, LoggerInterface $logger)

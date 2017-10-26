@@ -9,8 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP\Actions;
-
+namespace JupyterPHP\Actions;
 
 interface Action
 {

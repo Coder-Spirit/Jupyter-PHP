@@ -9,8 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP\System;
-
+namespace JupyterPHP\System;
 
 abstract class UnixSystem extends System
 {
