@@ -7,9 +7,9 @@
         "php": ">=7.0.0",
         "ext-zmq": "*",
         "composer/composer": "^1.5",
-        "monolog/monolog": "^1.22",
+        "monolog/monolog": "^1.23",
         "psy/psysh": "^0.8",
-        "ramsey/uuid": "^3.5",
+        "ramsey/uuid": "^3.7",
         "react/zmq": "^0.3.0"
     },
     "require-dev": {
