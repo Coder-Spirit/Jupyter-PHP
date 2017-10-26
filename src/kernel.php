@@ -22,7 +22,7 @@ define(
     __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor'
 );
 
-$pathToVendor = file_exists(PATH_TO_VENDOR_AS_LIBRARY)
+$pathToVendor = \file_exists(PATH_TO_VENDOR_AS_LIBRARY)
     ? PATH_TO_VENDOR_AS_LIBRARY
     : PATH_TO_VENDOR_AS_PROJECT;
 
@@ -77,7 +77,7 @@ try {
     $connUris = ConnectionSettings::getConnectionUris($connectionSettings);
 
     $logger->debug('Connection settings', [
-        'processId' => getmypid(),
+        'processId' => \getmypid(),
         'connSettings' => $connectionSettings,
         'connUris' => $connUris
     ]);

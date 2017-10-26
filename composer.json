@@ -6,7 +6,7 @@
     "require": {
         "php": ">=7.0.0",
         "ext-zmq": "*",
-        "composer/composer": "^1.4",
+        "composer/composer": "^1.5",
         "monolog/monolog": "^1.22",
         "psy/psysh": "^0.8",
         "ramsey/uuid": "^3.5",

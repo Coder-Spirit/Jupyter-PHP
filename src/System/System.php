@@ -34,7 +34,7 @@ abstract class System
         } elseif (self::OS_WIN === $phpOs) {
             return new WindowsSystem();
         } else {
-            throw new \RuntimeException('This platform is unknown for the installer');
+            throw new \RuntimeException('This platform is unknown for the Jupyter-PHP kernel');
         }
     }
 
@@ -68,15 +68,15 @@ abstract class System
 
     private static function guessOperativeSystem(): int
     {
-        $phpOS = strtolower(PHP_OS);
+        $phpOS = \strtolower(PHP_OS);
 
         if ('linux' === $phpOS) {
             return self::OS_LINUX;
         } elseif ('darwin' === $phpOS) {
             return self::OS_OSX;
-        } elseif (in_array($phpOS, ['windows', 'winnt', 'win32'])) {
+        } elseif (\in_array($phpOS, ['windows', 'winnt', 'win32'])) {
             return self::OS_WIN;
-        } elseif (in_array($phpOS, ['freebsd', 'netbsd', 'openbsd'])) {
+        } elseif (\in_array($phpOS, ['freebsd', 'netbsd', 'openbsd'])) {
             return self::OS_BSD;
         } else {
             return self::OS_UNKNOWN;

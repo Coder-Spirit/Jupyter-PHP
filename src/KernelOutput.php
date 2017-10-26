@@ -59,7 +59,7 @@ final class KernelOutput implements OutputInterface
         $types = self::OUTPUT_NORMAL | self::OUTPUT_RAW | self::OUTPUT_PLAIN;
         $type = $types & $options ?: self::OUTPUT_NORMAL;
         
-        if (is_string($messages)) {
+        if (\is_string($messages)) {
             if ("<aside>⏎</aside>" === $messages) {
                 return;
             }
@@ -72,11 +72,11 @@ final class KernelOutput implements OutputInterface
                 case OutputInterface::OUTPUT_RAW:
                     break;
                 case OutputInterface::OUTPUT_PLAIN:
-                    $preparedMessage = strip_tags($this->formatter->format($messages)) . ($newline ? '' : "\n");
+                    $preparedMessage = \strip_tags($this->formatter->format($messages)) . ($newline ? '' : "\n");
                     break;
             }
-        } elseif (is_array($messages)) {
-            $preparedMessage = implode("\n", $messages) . ($newline ? '' : "\n");
+        } elseif (\is_array($messages)) {
+            $preparedMessage = \implode("\n", $messages) . ($newline ? '' : "\n");
         } else {
             return; // TODO: Throw an error?
         }

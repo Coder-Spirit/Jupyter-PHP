@@ -24,16 +24,22 @@ final class ConnectionSettings
             $argv = $_SERVER['argv'];
         }
 
-        if (is_array($argv) && count($argv) > 1) {
-            $connectionFileContents = file_get_contents($argv[1], null, null, 0, 2048);
+        if (\is_array($argv) && \count($argv) > 1) {
+            $connectionFileContents = \file_get_contents(
+                $argv[1],
+                null,
+                null,
+                0,
+                2048
+            );
 
             if (false === $connectionFileContents) {
                 throw new \RuntimeException('Connection Settings: Unable to open the connection file.');
             }
 
-            $connectionSettings = json_decode($connectionFileContents, true);
+            $connectionSettings = \json_decode($connectionFileContents, true);
 
-            if (json_last_error() !== JSON_ERROR_NONE) {
+            if (\json_last_error() !== JSON_ERROR_NONE) {
                 throw new \RuntimeException('Connection Settings: Corrupted connection file.');
             }
 

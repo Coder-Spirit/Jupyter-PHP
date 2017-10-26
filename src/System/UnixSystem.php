@@ -19,11 +19,11 @@ abstract class UnixSystem extends System
      */
     public function getCurrentUser(): string
     {
-        if (function_exists('posix_getpwuid') && function_exists('posix_geteuid')) {
-            $pwuData = posix_getpwuid(posix_geteuid());
+        if (\function_exists('posix_getpwuid') && \function_exists('posix_geteuid')) {
+            $pwuData = \posix_getpwuid(\posix_geteuid());
             return $pwuData['name'];
         } elseif ($this->checkIfCommandExists('whoami')) {
-            return exec('whoami');
+            return \exec('whoami');
         } else {
             throw new \RuntimeException('Unable to obtain the current username.');
         }
@@ -34,11 +34,11 @@ abstract class UnixSystem extends System
      */
     public function getCurrentUserHome(): string
     {
-        if (function_exists('posix_getpwuid') && function_exists('posix_geteuid')) {
-            $pwuData = posix_getpwuid(posix_geteuid());
+        if (\function_exists('posix_getpwuid') && \function_exists('posix_geteuid')) {
+            $pwuData = \posix_getpwuid(\posix_geteuid());
             return $pwuData['dir'];
-        } elseif (function_exists('getenv') && false !== getenv('HOME')) {
-            return getenv('HOME');
+        } elseif (\function_exists('getenv') && false !== \getenv('HOME')) {
+            return \getenv('HOME');
         } else {
             throw new \RuntimeException('Unable to obtain the current user home directory.');
         }
@@ -50,16 +50,16 @@ abstract class UnixSystem extends System
      */
     public function checkIfCommandExists(string $cmdName): bool
     {
-        if (!function_exists('exec')) {
+        if (!\function_exists('exec')) {
             return false;
         }
 
-        $sysResponse = exec(
-            'PATH='.getenv('PATH').'; '.
+        $sysResponse = \exec(
+            'PATH='.\getenv('PATH').'; '.
             "if command -v ".$cmdName." >/dev/null 2>&1; then echo \"true\"; else echo \"false\"; fi;"
         );
 
-        return filter_var($sysResponse, FILTER_VALIDATE_BOOLEAN);
+        return \filter_var($sysResponse, FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -78,8 +78,8 @@ abstract class UnixSystem extends System
     public function validatePath(string $path): bool
     {
         $absPath = $this->getAbsolutePath($path);
-        $absPathParts = preg_split('/\//', preg_replace('/(^\/|\/$)/', '', $absPath));
-        $nSteps = count($absPathParts);
+        $absPathParts = \preg_split('/\//', \preg_replace('/(^\/|\/$)/', '', $absPath));
+        $nSteps = \count($absPathParts);
 
         $tmpPath = '';
         $prevReadable = false;
@@ -88,11 +88,11 @@ abstract class UnixSystem extends System
         for ($i=0; $i<$nSteps; $i++) {
             $tmpPath .= '/' . $absPathParts[$i];
 
-            if (file_exists($tmpPath)) {
-                if (!is_dir($tmpPath)) {
-                    if (is_link($tmpPath)) {
-                        $linkPath = readlink($tmpPath);
-                        if (false === $linkPath || !is_dir($linkPath)) {
+            if (\file_exists($tmpPath)) {
+                if (!\is_dir($tmpPath)) {
+                    if (\is_link($tmpPath)) {
+                        $linkPath = \readlink($tmpPath);
+                        if (false === $linkPath || !\is_dir($linkPath)) {
                             return false;
                         }
                         $tmpPath = $linkPath;
@@ -101,8 +101,8 @@ abstract class UnixSystem extends System
                     }
                 }
 
-                $prevReadable = is_readable($tmpPath);
-                $prevWritable = is_writable($tmpPath);
+                $prevReadable = \is_readable($tmpPath);
+                $prevWritable = \is_writable($tmpPath);
             } else {
                 return ($prevReadable && $prevWritable);
             }
@@ -119,7 +119,7 @@ abstract class UnixSystem extends System
     {
         $absPath = $this->getAbsolutePath($path);
 
-        if (!file_exists($absPath) && false === mkdir($absPath, 0755, true)) {
+        if (!\file_exists($absPath) && false === \mkdir($absPath, 0755, true)) {
             throw new \RuntimeException('Unable to create the specified directory ('.$absPath.').');
         }
 
@@ -132,7 +132,7 @@ abstract class UnixSystem extends System
      */
     protected function isAbsolutePath(string $path): bool
     {
-        return (1 === preg_match('#^/#', $path));
+        return (1 === \preg_match('#^/#', $path));
     }
 
     /**
@@ -143,6 +143,6 @@ abstract class UnixSystem extends System
     {
         return $this->isAbsolutePath($path)
             ? $path
-            : (getcwd() . DIRECTORY_SEPARATOR . $path);
+            : (\getcwd() . DIRECTORY_SEPARATOR . $path);
     }
 }

@@ -40,7 +40,7 @@ final class JupyterBroker
     {
         $this->key = $key;
         $this->signatureScheme = $signatureScheme;
-        $this->hashAlgorithm = preg_split('/-/', $signatureScheme)[1];
+        $this->hashAlgorithm = \preg_split('/-/', $signatureScheme)[1];
         $this->sessionId = $sessionId;
         $this->logger = $logger;
     }
@@ -56,21 +56,21 @@ final class JupyterBroker
         $header = $this->createHeader($msgType);
 
         $msgDef = [
-            json_encode(empty($header) ? new \stdClass : $header),
-            json_encode(empty($parentHeader) ? new \stdClass : $parentHeader),
-            json_encode(empty($metadata) ? new \stdClass : $metadata),
-            json_encode(empty($content) ? new \stdClass : $content),
+            \json_encode(empty($header) ? new \stdClass : $header),
+            \json_encode(empty($parentHeader) ? new \stdClass : $parentHeader),
+            \json_encode(empty($metadata) ? new \stdClass : $metadata),
+            \json_encode(empty($content) ? new \stdClass : $content),
         ];
 
         $finalMsg = $zmqIds;
 
-        $finalMsg = array_merge(
+        $finalMsg = \array_merge(
             $finalMsg,
             ['<IDS|MSG>', $this->sign($msgDef)],
             $msgDef);
 
         if (null !== $this->logger) {
-            $this->logger->debug('Sending message', ['processId' => getmypid(), 'message' => $finalMsg]);
+            $this->logger->debug('Sending message', ['processId' => \getmypid(), 'message' => $finalMsg]);
         }
 
         $stream->send($finalMsg);
@@ -90,16 +90,16 @@ final class JupyterBroker
 
     private function sign(array $message_list): string
     {
-        $hm = hash_init(
+        $hm = \hash_init(
             $this->hashAlgorithm,
             HASH_HMAC,
             $this->key
         );
 
         foreach ($message_list as $item) {
-            hash_update($hm, $item);
+            \hash_update($hm, $item);
         }
 
-        return hash_final($hm);
+        return \hash_final($hm);
     }
 }
