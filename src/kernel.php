@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Litipk\JupyterPHP;
+namespace JupyterPHP;
 
 define(
     'PATH_TO_VENDOR_AUTOLOADER_AS_LIBRARY',
@@ -31,10 +31,6 @@ $pathToVendorAutoloader = \file_exists(PATH_TO_VENDOR_AUTOLOADER_AS_LIBRARY)
 require ($pathToVendorAutoloader);
 
 
-use JupyterPHP\ConnectionSettings;
-use JupyterPHP\JupyterBroker;
-use JupyterPHP\KernelCore;
-use JupyterPHP\LoggerSettings;
 use JupyterPHP\System\System;
 use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
 use Monolog\Handler\FingersCrossedHandler;
@@ -100,6 +96,8 @@ try {
     );
 
     $kernelCore->run();
-} catch (\Exception $e) {
-    $logger->error('Unexpected error', ['exception' => $e]);
+} catch(\Error $e) {
+    $logger->error('Unexpected error', ['error' => $e]);
+}catch (\Exception $e) {
+    $logger->error('Unexpected exception', ['exception' => $e]);
 }
