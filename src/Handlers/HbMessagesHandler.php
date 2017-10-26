@@ -31,12 +31,12 @@ final class HbMessagesHandler
 
     public function __invoke($msg)
     {
-        $this->logger->debug('Received message', ['processId' => getmypid(), 'msg' => $msg]);
+        $this->logger->debug('Received message', ['processId' => \getmypid(), 'msg' => $msg]);
 
         if (['ping'] === $msg) {
             $this->hbSocket->send($msg);
         } else {
-            $this->logger->error('Unknown message', ['processId' => getmypid(), 'msg' => $msg]);
+            $this->logger->error('Unknown message', ['processId' => \getmypid(), 'msg' => $msg]);
         }
     }
 }

@@ -103,19 +103,19 @@ final class ExecuteAction implements Action
     private function getClosure(): callable
     {
         $closure = function () {
-            extract($this->shellSoul->getScopeVariables());
+            \extract($this->shellSoul->getScopeVariables());
 
             try {
                 $this->shellSoul->addCode($this->code);
 
                 // evaluate the current code buffer
-                ob_start([$this->shellSoul, 'writeStdout'], 1);
+                \ob_start([$this->shellSoul, 'writeStdout'], 1);
 
-                set_error_handler([$this->shellSoul, 'handleError']);
+                \set_error_handler([$this->shellSoul, 'handleError']);
                 $_ = eval($this->shellSoul->flushCode() ?: Loop::NOOP_INPUT);
-                restore_error_handler();
+                \restore_error_handler();
 
-                ob_end_flush();
+                \ob_end_flush();
 
                 $this->shellSoul->writeReturnValue($_);
             } catch (BreakException $_e) {
@@ -137,7 +137,7 @@ final class ExecuteAction implements Action
                 $this->handleEvalException($_e);
             }
 
-            $this->shellSoul->setScopeVariables(get_defined_vars());
+            $this->shellSoul->setScopeVariables(\get_defined_vars());
         };
 
         return $closure;
@@ -145,9 +145,9 @@ final class ExecuteAction implements Action
 
     private function handleEvalException(\Exception $_e)
     {
-        restore_error_handler();
-        if (ob_get_level() > 0) {
-            ob_end_clean();
+        \restore_error_handler();
+        if (\ob_get_level() > 0) {
+            \ob_end_clean();
         }
         $this->shellSoul->writeException($_e);
     }

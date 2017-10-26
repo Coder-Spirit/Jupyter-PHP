@@ -27,6 +27,6 @@ class HbErrorHandler
 
     public function __invoke($e)
     {
-        $this->logger->debug('Received message', ['processId' => getmypid(), 'error' => $e]);
+        $this->logger->debug('Received message', ['processId' => \getmypid(), 'error' => $e]);
     }
 }

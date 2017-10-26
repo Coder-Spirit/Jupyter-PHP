@@ -27,6 +27,6 @@ final class IOPubMessagesHandler
 
     public function __invoke($msg)
     {
-        $this->logger->debug('Received message', ['processId' => getmypid(), 'msg' => $msg]);
+        $this->logger->debug('Received message', ['processId' => \getmypid(), 'msg' => $msg]);
     }
 }

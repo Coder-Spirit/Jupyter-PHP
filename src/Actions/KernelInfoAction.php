@@ -47,7 +47,7 @@ final class KernelInfoAction implements Action
                 'banner' => 'Jupyter-PHP Kernel',
                 'language_info' => [
                     'name' => 'PHP',
-                    'version' => phpversion(),
+                    'version' => \phpversion(),
                     'mimetype' => 'text/x-php',
                     'file_extension' => '.php',
                     'pygments_lexer' => 'PHP',
