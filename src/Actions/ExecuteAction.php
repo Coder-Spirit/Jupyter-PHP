@@ -119,32 +119,36 @@ final class ExecuteAction implements Action
 
                 $this->shellSoul->writeReturnValue($_);
             } catch (BreakException $_e) {
-                restore_error_handler();
-                if (ob_get_level() > 0) {
-                    ob_end_clean();
-                }
-                $this->shellSoul->writeException($_e);
-
+                $this->handleEvalException($_e);
                 return;
             } catch (ThrowUpException $_e) {
-                restore_error_handler();
-                if (ob_get_level() > 0) {
-                    ob_end_clean();
-                }
-                $this->shellSoul->writeException($_e);
-
+                $this->handleEvalException($_e);
                 throw $_e;
+            } catch (\Error $_e) {
+                $this->handleEvalException(new \ErrorException(
+                    $_e->getMessage(),
+                    $_e->getCode(),
+                    1,
+                    $_e->getFile(),
+                    $_e->getLine(),
+                    $_e->getPrevious()
+                ));
             } catch (\Exception $_e) {
-                restore_error_handler();
-                if (ob_get_level() > 0) {
-                    ob_end_clean();
-                }
-                $this->shellSoul->writeException($_e);
+                $this->handleEvalException($_e);
             }
 
             $this->shellSoul->setScopeVariables(get_defined_vars());
         };
 
         return $closure;
+    }
+
+    private function handleEvalException(\Exception $_e)
+    {
+        restore_error_handler();
+        if (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+        $this->shellSoul->writeException($_e);
     }
 }
