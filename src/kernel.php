@@ -41,43 +41,56 @@ use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;
 use Ramsey\Uuid\Uuid;
 
-
 $system = System::getSystem();
-$logger = new Logger('kernel');
+$logger = configureLogger($system);
 
-$loggerActivationStrategy = new ErrorLevelActivationStrategy(LoggerSettings::getCrossFingersLevel());
+try {
+    startCore($logger);
+} catch(\Error $e) {
+    $logger->error('Unexpected error', ['error' => $e]);
+} catch (\Exception $e) {
+    $logger->error('Unexpected exception', ['exception' => $e]);
+}
 
-if ('root' === $system->getCurrentUser()) {
-    if (System::OS_LINUX === $system->getOperativeSystem()) {
+function configureLogger(System $system): Logger
+{
+    $logger = new Logger('kernel');
+    $loggerActivationStrategy = new ErrorLevelActivationStrategy(LoggerSettings::getCrossFingersLevel());
+
+    if ('root' === $system->getCurrentUser()) {
+        if (System::OS_LINUX === $system->getOperativeSystem()) {
+            $logger->pushHandler(
+                new FingersCrossedHandler((Logger::DEBUG === $loggerActivationStrategy)
+                    ? (new GroupHandler([
+                        new SyslogHandler('jupyter-php'),
+                        new StreamHandler('php://stderr')
+                    ]))
+                    : (new SyslogHandler('jupyter-php')),
+                    $loggerActivationStrategy,
+                    128
+                )
+            );
+        }
+    } else {
+        $system->ensurePath($system->getAppDataDirectory() . '/logs');
         $logger->pushHandler(
             new FingersCrossedHandler((Logger::DEBUG === $loggerActivationStrategy)
                 ? (new GroupHandler([
-                    new SyslogHandler('jupyter-php'),
+                    new RotatingFileHandler($system->getAppDataDirectory() . '/logs/error.log', 7),
                     new StreamHandler('php://stderr')
                 ]))
-                : (new SyslogHandler('jupyter-php')),
+                : (new RotatingFileHandler($system->getAppDataDirectory() . '/logs/error.log', 7)),
                 $loggerActivationStrategy,
                 128
             )
         );
     }
-} else {
-    $system->ensurePath($system->getAppDataDirectory().'/logs');
-    $logger->pushHandler(
-        new FingersCrossedHandler((Logger::DEBUG === $loggerActivationStrategy)
-            ? (new GroupHandler([
-                new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7),
-                new StreamHandler('php://stderr')
-            ]))
-            : (new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7)),
-            $loggerActivationStrategy,
-            128
-        )
-    );
+
+    return $logger;
 }
 
-
-try {
+function startCore(Logger $logger)
+{
     // Obtain settings
     $connectionSettings = ConnectionSettings::get();
     $connUris = ConnectionSettings::getConnectionUris($connectionSettings);
@@ -100,8 +113,4 @@ try {
     );
 
     $kernelCore->run();
-} catch(\Error $e) {
-    $logger->error('Unexpected error', ['error' => $e]);
-}catch (\Exception $e) {
-    $logger->error('Unexpected exception', ['exception' => $e]);
 }
