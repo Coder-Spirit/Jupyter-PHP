@@ -50,11 +50,12 @@ $loggerActivationStrategy = new ErrorLevelActivationStrategy(LoggerSettings::get
 if ('root' === $system->getCurrentUser()) {
     if (System::OS_LINUX === $system->getOperativeSystem()) {
         $logger->pushHandler(
-            new FingersCrossedHandler(
-                new GroupHandler([
+            new FingersCrossedHandler((Logger::DEBUG === $loggerActivationStrategy)
+                ? (new GroupHandler([
                     new SyslogHandler('jupyter-php'),
                     new StreamHandler('php://stderr')
-                ]),
+                ]))
+                : (new SyslogHandler('jupyter-php')),
                 $loggerActivationStrategy,
                 128
             )
@@ -62,14 +63,17 @@ if ('root' === $system->getCurrentUser()) {
     }
 } else {
     $system->ensurePath($system->getAppDataDirectory().'/logs');
-    $logger->pushHandler(new FingersCrossedHandler(
-        new GroupHandler([
-            new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7),
-            new StreamHandler('php://stderr')
-        ]),
-        $loggerActivationStrategy,
-        128
-    ));
+    $logger->pushHandler(
+        new FingersCrossedHandler((Logger::DEBUG === $loggerActivationStrategy)
+            ? (new GroupHandler([
+                new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7),
+                new StreamHandler('php://stderr')
+            ]))
+            : (new RotatingFileHandler($system->getAppDataDirectory().'/logs/error.log', 7)),
+            $loggerActivationStrategy,
+            128
+        )
+    );
 }
 
 
