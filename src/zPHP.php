@@ -2,6 +2,8 @@
 
 /**
  * Author: Zbigniew 'zibi' Jarosik <zibi@nora.pl>
+ *
+ * based on https://jupyter-client.readthedocs.io/en/latest/messaging.html
  */
 
 namespace JupyterPHP;
@@ -65,7 +67,6 @@ class zPHP
         $object = $this->getObject($className);
 
         call_user_func_array($object,$params);
-//        call_user_func_array([$object,'__invoke'],$params);
     }
 
     public function imageWorks($imageData)
