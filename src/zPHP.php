@@ -18,10 +18,14 @@ class zPHP
 
     private $header;
 
+    private $pluginVersion;
+
     public function __construct($broker,$iopubSocket)
     {
         $this->broker = $broker;
         $this->iopubSocket = $iopubSocket;
+
+        $this->reloadPlugins();
     }
     public function send($msgType, $data)
     {
@@ -33,15 +37,23 @@ class zPHP
         $this->header = $header;
     }
 
+    public function reloadPlugins()
+    {
+        $this->pluginVersion = str_replace('.','',microtime(true));
+    }
+
     private function getObject($name)
     {
-        $namespace = str_replace('.','','SpecialDimension_'.uniqid(microtime(true)));
+        $namespace = str_replace('.','','SpecialDimension_'.$this->pluginVersion);
+        $className = "{$namespace}\\{$name}";
 
-        $fileName = __DIR__."/zPHP/{$name}.php";
+        if(!class_exists($className))
+        {
+            $fileName = __DIR__."/zPHP/{$name}.php";
+            $classBody = "namespace {$namespace}; ?>".file_get_contents($fileName);
 
-        $classBody = "namespace {$namespace}; ?>".file_get_contents($fileName);
-
-        eval($classBody);
+            eval($classBody);
+        }
 
         $className = "{$namespace}\\{$name}";
         $object = new $className($this);
