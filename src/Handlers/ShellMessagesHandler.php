@@ -19,6 +19,7 @@ use JupyterPHP\JupyterBroker;
 use JupyterPHP\Shell;
 
 use JupyterPHP\KernelOutput;
+use JupyterPHP\zPHP;
 use Monolog\Logger;
 use React\ZMQ\SocketWrapper;
 
@@ -33,7 +34,7 @@ final class ShellMessagesHandler
     /** @var KernelInfoAction */
     private $kernelInfoAction;
 
-    /** @var \JupyterPHP\Actions\ShutdownAction */
+    /** @var ShutdownAction */
     private $shutdownAction;
 
     /** @var Shell */
@@ -41,6 +42,9 @@ final class ShellMessagesHandler
 
     /** @var Logger */
     private $logger;
+
+    /** @var zPHP */
+    private $zPHP;
 
 
     public function __construct(
@@ -50,8 +54,9 @@ final class ShellMessagesHandler
         Logger $logger
     ) {
         $this->shellSoul = new Shell();
+        $this->zPHP = new zPHP($broker,$iopubSocket);
 
-        $this->executeAction = new ExecuteAction($broker, $iopubSocket, $shellSocket, $this->shellSoul);
+        $this->executeAction = new ExecuteAction($broker, $iopubSocket, $shellSocket, $this->shellSoul, $this->zPHP);
         $this->historyAction = new HistoryAction($broker, $shellSocket);
         $this->kernelInfoAction = new KernelInfoAction($broker, $shellSocket, $iopubSocket);
         $this->shutdownAction = new ShutdownAction($broker, $iopubSocket, $shellSocket);
@@ -70,20 +75,20 @@ final class ShellMessagesHandler
         // Read ZMQ IDs until we reach the delimiter
         $zmqIds = array();
         while (!empty($msg)) {
-            $item = \array_shift($msg);
+            $item = array_shift($msg);
             if ($item === '<IDS|MSG>') break;
-            else \array_push($zmqIds, $item);
+            else array_push($zmqIds, $item);
         }
 
         // Read the remaining items
         list($hmac, $header, $parentHeader, $metadata, $content) = $msg;
 
-        $header = \json_decode($header, true);
-        $content = \json_decode($content, true);
+        $header = json_decode($header, true);
+        $content = json_decode($content, true);
 
         $this->logger->debug('Received message', [
-            'processId' => \getmypid(),
-            'zmqIds' => \htmlentities(\implode(", ", $zmqIds), ENT_COMPAT, "UTF-8"),
+            'processId' => getmypid(),
+            'zmqIds' => htmlentities(implode(", ", $zmqIds), ENT_COMPAT, "UTF-8"),
             'hmac' => $hmac,
             'header' => $header,
             'parentHeader' => $parentHeader,
@@ -102,7 +107,7 @@ final class ShellMessagesHandler
         } elseif ('comm_open' === $header['msg_type']) {
             // TODO: Research about what should be done.
         } else {
-            $this->logger->error('Unknown message type', ['processId' => \getmypid(), 'header' => $header]);
+            $this->logger->error('Unknown message type', ['processId' => getmypid(), 'header' => $header]);
         }
     }
 }
