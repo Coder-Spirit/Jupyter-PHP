@@ -3,6 +3,7 @@
 [![Author](http://img.shields.io/badge/author-@castarco-blue.svg?style=flat-square)](https://twitter.com/castarco)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Packagist Version](https://img.shields.io/packagist/v/Litipk/jupyter-php.svg?style=flat-square)](https://packagist.org/packages/Litipk/jupyter-php)
+[![Open Source Helpers](https://www.codetriage.com/litipk/jupyter-php/badges/users.svg)](https://www.codetriage.com/litipk/jupyter-php)
 
 ## Introduction
 
